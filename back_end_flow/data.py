@@ -27,7 +27,7 @@ reverse_label_mapping = {value: key for key, value in label_mapping.items()}
 
 collection = db[f"flow_data_{ip}_{intf_str}"]
 
-model = joblib.load("/home/frblam/Desktop/NCKH/back_end_flow/rfc.joblib")
+model = joblib.load("rfc.joblib")
 
 def reduce_mem_usage(df, verbose=True):
     # 定义数值型数据类型的列表
