@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from data import *
 import pandas as pd
 import json
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 import pandas as pd
 import uvicorn
@@ -37,29 +37,46 @@ app.add_middleware(
     allow_headers=["*"], # Tiêu đề HTTP cho phép
 )
 
-@app.get("/items/", response_model=List[dict])
-async def read_items():
-    try:
+# @app.get("/items/", response_model=List[dict])
+# async def read_items():
+#     try:
     
         
-        # # Tiền xử lý dữ liệu
-        # df_processed = preprocess_flow(df_f)
+#         # # Tiền xử lý dữ liệu
+#         # df_processed = preprocess_flow(df_f)
         
-        # # Dự đoán
-        # pred = model.predict(df_processed)
+#         # # Dự đoán
+#         # pred = model.predict(df_processed)
         
-        # # Thêm kết quả dự đoán vào DataFrame
-        # df_f['label'] = pred
+#         # # Thêm kết quả dự đoán vào DataFrame
+#         # df_f['label'] = pred
         
-        df_l = predict_label(collection)
+#         df_l = predict_label(collection)
 
         
-        return df_l[0:15]
+#         return df_l[0:15]
+        
+#         # Trả về kết quả dưới dạng JSON
+#         #return df_f.to_dict(orient='records')
+#     except Exception as e:
+#     # Nếu có lỗi, trả về thông báo lỗi với status code 500
+#         raise HTTPException(status_code=500, detail=str(e))
+    
+    
+#API: http://127.0.0.1:8000/items/?skip=45&limit=15   
+@app.get("/items/", response_model=List[Dict])
+async def read_items(skip: int = Query(0, alias="skip"), limit: int = Query(15, alias="limit")):
+    try:
+        # Tiền xử lý và dự đoán ở đây
+        df_l = predict_label(collection)
+        
+        # Áp dụng phân trang
+        paginated_items = df_l[skip : skip + limit]
         
         # Trả về kết quả dưới dạng JSON
-        #return df_f.to_dict(orient='records')
+        return paginated_items
     except Exception as e:
-    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/alert/", response_model=List[dict])
