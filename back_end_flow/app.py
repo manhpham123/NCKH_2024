@@ -63,30 +63,54 @@ app.add_middleware(
 #         raise HTTPException(status_code=500, detail=str(e))
     
     
-#API: http://127.0.0.1:8000/items/?page=1&limit=10   
+#API: http://127.0.0.1:8000/items/?page=1&limit=10&filter_field=Source%20IP&filter_value=117.18.232.200   
 @app.get("/items/", response_model=List[Dict])
-async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, alias="limit")):
+async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, alias="limit"), filter_field: str = Query("", alias="filter_field"), filter_value: str = Query("", alias="filter_value")):
     try:
-        skip = (page - 1) * limit
-        # Tiền xử lý và dự đoán ở đây
-        df_l, df_st = predict_label(collection)
-        
-        total = len(df_l)
-        
-        limit = limit
-        
-        page = page
-        
-        # Áp dụng phân trang
-        paginated_items = df_l[skip : skip + limit]
-        
-        # Trả về kết quả dưới dạng JSON
-        return [{
-            "data": paginated_items,
-            "limit": limit,
-            "page": page,
-            "total": total
-        }]
+        if (filter_field == "") | (filter_value == ""):
+            skip = (page - 1) * limit
+            # Tiền xử lý và dự đoán ở đây
+            df_l, df_st = predict_label(collection)
+            
+            total = len(df_l)
+            
+            limit = limit
+            
+            page = page
+            
+            # Áp dụng phân trang
+            paginated_items = df_l[skip : skip + limit]
+            
+            # Trả về kết quả dưới dạng JSON
+            return [{
+                "data": paginated_items,
+                "limit": limit,
+                "page": page,
+                "total": total
+            }]
+        else :
+            skip = (page - 1) * limit
+            # Tiền xử lý và dự đoán ở đây
+            df_l, df_st = predict_label(collection)
+            
+            df_st = Filter(filter_field, filter_value, df_st)
+            
+            total = len(df_st)
+            
+            limit = limit
+            
+            page = page
+            
+            # Áp dụng phân trang
+            paginated_items = df_st[skip : skip + limit]
+            
+            return [{
+                "data": paginated_items,
+                "limit": limit,
+                "page": page,
+                "total": total
+            }]
+            
     except Exception as e:
         # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
