@@ -7,7 +7,7 @@ import DashboardGeneralItem from "./component/DashboardGeneralItem";
 import { Space, message } from "antd";
 import Icons from "../../assets/icons";
 import DboardTopCardItem from "./component/DboardTopCardItem";
-import { useItems } from "../../utils/request";
+import { usePhantrang } from "../../utils/request";
 import { customerApi } from "../../apis/customer";
 
 const Dashboard = () => {
@@ -21,16 +21,12 @@ const Dashboard = () => {
     ]
     dispatch(setSelectedBreadCrumb(breadCrumb))
   }, [])
-  const {data, mutate} = useItems()
-  // const handlerUpdate = (dataUpdate: any) =>{
-  //   const res = customerApi.updateStatus(data);
-  //   if(res.status === 200) {
-  //     message.success("ooke xong");
-  //     mutate();
-  //   }else message.error()
-  //   message.warning()
-  // }
-  console.log(data);
+  const params = {
+    page:2
+  }
+  const {data, mutate} = usePhantrang(params);
+ 
+  console.log(data[0]);
   
   return (
     <div className="customers-wrapper">
