@@ -23,7 +23,7 @@ const UserManagement = () => {
       <div style={{marginBottom: "12px"}}>
         <UserManagementFilter filters={filter} setFilters={setFilter}/>
       </div>
-       <UserManagementTable/>
+       <UserManagementTable />
     </div>
   );
 };

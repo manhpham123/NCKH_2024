@@ -12,7 +12,7 @@ import CardTitleCustom from "../../../components/CardTitleCustom";
 import { useNavigate } from "react-router-dom";
 import { USER_MANAGEMENT_DETAILS } from "../../../routes/route.constant";
 import { usePhantrang } from "../../../utils/request";
-
+import { Itemfilter } from "../../../constants/types/common.type";
 
 const UserManagementTable: FC = () => {
   const navigate = useNavigate();
@@ -149,7 +149,7 @@ const UserManagementTable: FC = () => {
   return (
     <div>
       <Card className="card-container" size="small">
-        <CardTitleCustom title="List targets"/>
+        <CardTitleCustom title="List flows"/>
         <TableCustom
           dataSource={data?.data}
           columns={columns}
