@@ -64,7 +64,7 @@ app.add_middleware(
     
     
 #API: http://127.0.0.1:8000/items/?page=1&limit=10&filter_field=Source%20IP&filter_value=117.18.232.200   
-@app.get("/items/", response_model=List[Dict])
+@app.get("/items/", response_model=Dict)
 async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, alias="limit"), filter_field: str = Query("", alias="filter_field"), filter_value: str = Query("", alias="filter_value")):
     try:
         if (filter_field == "") | (filter_value == ""):
@@ -81,13 +81,15 @@ async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, a
             # Áp dụng phân trang
             paginated_items = df_l[skip : skip + limit]
             
-            # Trả về kết quả dưới dạng JSON
-            return [{
+            re_ob = {
                 "data": paginated_items,
                 "limit": limit,
                 "page": page,
                 "total": total
-            }]
+            }
+            
+            # Trả về kết quả dưới dạng JSON
+            return re_ob
         else :
             skip = (page - 1) * limit
             # Tiền xử lý và dự đoán ở đây
@@ -104,12 +106,14 @@ async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, a
             # Áp dụng phân trang
             paginated_items = df_st[skip : skip + limit]
             
-            return [{
+            re_ob = {
                 "data": paginated_items,
                 "limit": limit,
                 "page": page,
                 "total": total
-            }]
+            }
+            
+            return re_ob
             
     except Exception as e:
         # Nếu có lỗi, trả về thông báo lỗi với status code 500
