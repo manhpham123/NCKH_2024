@@ -6,34 +6,46 @@ import {
   Typography,
   Form,
   Input,
+  Select,
 } from "antd";
 import "./style.scss";
 import React, { useEffect, useState } from "react";
-import { FilterUserManagementType } from "../../../constants/types/userManagement.type";
 import ButtonCustom from "../../../components/ButtonCustom";
+import { Itemfilter } from "../../../constants/types/common.type";
 
 type Props = {
-  filters: FilterUserManagementType;
-  setFilters: (filters: FilterUserManagementType) => void;
+  filters: Itemfilter;
+  setFilters: (filters: Itemfilter) => void;
 };
 
 
 const UserManagementFilter: React.FC<Props> = ({ filters, setFilters }) => {
-  const [filterData, setFilterData] = useState<FilterUserManagementType>({});
+const [filterData, setFilterData] = useState<Itemfilter>({});
 
   useEffect(() => {
     if (filters) {
       setFilterData({ ...filterData, ...filters })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
-
-
   return (
-    <Form className="userManager-FilterForm">
+    <Form className="userManager-FilterForm" layout="vertical">
       <Space direction="horizontal" style={{width: '100%'}}>
+
+        {/* <Form.Item label="chon truong">
+        <Select onChange={(target)=>}>
+            <Select.Option >ip nguon</Select.Option>      
+            <Select.Option>ip dich</Select.Option>  
+            <Select.Option>mac</Select.Option>      
+        </Select>
+
+        </Form.Item>
+        
+        <Form.Item label="gia tri">
+        
         <Input placeholder="Search IP ..." />
+        </Form.Item> */}
+        <Input placeholder="Source IP ..." />
         <ButtonCustom
           label="Search"
           bgColor="#2862AF"
@@ -42,6 +54,7 @@ const UserManagementFilter: React.FC<Props> = ({ filters, setFilters }) => {
         />
       </Space>
     </Form>
+    
   );
 };
 

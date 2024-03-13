@@ -6,7 +6,10 @@ export type CommonGetAllParams = {
   limit?: number;
 };
 export type Itemfilter = {
-  timkiem: string;
+  SourceIp?: string;
+  SourcePort?:string;
+  DestinationIP?:string;
+  DestinationPort?:string;
 };
 export type CommonSearchAllParams = {
   page?: number;
