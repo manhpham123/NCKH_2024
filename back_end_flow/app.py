@@ -63,18 +63,30 @@ app.add_middleware(
 #         raise HTTPException(status_code=500, detail=str(e))
     
     
-#API: http://127.0.0.1:8000/items/?skip=45&limit=15   
+#API: http://127.0.0.1:8000/items/?page=1&limit=10   
 @app.get("/items/", response_model=List[Dict])
-async def read_items(skip: int = Query(0, alias="skip"), limit: int = Query(15, alias="limit")):
+async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, alias="limit")):
     try:
+        skip = (page - 1) * limit
         # Tiền xử lý và dự đoán ở đây
-        df_l = predict_label(collection)
+        df_l, df_st = predict_label(collection)
+        
+        total = len(df_l)
+        
+        limit = limit
+        
+        page = page
         
         # Áp dụng phân trang
         paginated_items = df_l[skip : skip + limit]
         
         # Trả về kết quả dưới dạng JSON
-        return paginated_items
+        return [{
+            "data": paginated_items,
+            "limit": limit,
+            "page": page,
+            "total": total
+        }]
     except Exception as e:
         # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
