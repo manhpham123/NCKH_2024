@@ -1,5 +1,5 @@
 import useSWR from "swr"
-import { CommonGetAllParams,Filter } from "../../constants/types/common.type";
+import { CommonGetAllParams,Itemfilter } from "../../constants/types/common.type";
 
 export const useAllitem = () => {
     const {data, error, isLoading, mutate}= useSWR('/items', {refreshInterval: 0});
@@ -8,10 +8,10 @@ export const useAllitem = () => {
 
 export const usePhantrang = (
     params?: CommonGetAllParams,
-    filter?: Filter
+    filter?: Itemfilter
 ) => {
     const { data, error, isLoading, mutate } = useSWR(
-        `items/?page=${params?.page}&limit=10`,
+        `items/?page=${params?.page}&limit=${params?.limit}`,
         { refreshInterval: 0}
     );
     return {
