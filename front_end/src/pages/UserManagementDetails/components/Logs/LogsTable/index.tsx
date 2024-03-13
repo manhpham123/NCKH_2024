@@ -6,7 +6,7 @@ import "./style.scss";
 import { dataMock } from "./mockData.config";
 import dayjs from "dayjs";
 import { CommonGetAllParams } from "../../../../../constants/types/common.type";
-import { RuleType } from "../../../../../constants/types/rules.type";
+import { ItemType } from "../../../../../constants/types/rules.type";
 import CardTitleCustom from "../../../../../components/CardTitleCustom";
 import TableCustom from "../../../../../components/TableCustom";
 
@@ -36,7 +36,7 @@ const LogsTable: FC = () => {
     })
     : [];
 
-  const columns: ColumnsType<RuleType> = [
+  const columns: ColumnsType<ItemType> = [
     {
       key: 2,
       title: "Time",

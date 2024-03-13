@@ -21,17 +21,21 @@ const Dashboard = () => {
     ]
     dispatch(setSelectedBreadCrumb(breadCrumb))
   }, [])
+
+  /*============== Phan trang
   const params = {
     page:2
   }
   const {data, mutate} = usePhantrang(params);
- 
-  console.log(data[0]);
+ console.log(data?.limit);
+ console.log(data?.data)
+ ===========================
+ */
   
   return (
     <div className="customers-wrapper">
       <Space direction="horizontal" className="dasboard-gn-wrapper">
-        <DashboardGeneralItem title="Số service" value={12} icon={<Icons.bell />} />
+        <DashboardGeneralItem title="Số service" value={4} icon={<Icons.bell />} />
       </Space>
       <DashboardChart />
       <Space direction="horizontal" className="dasboard-gn-wrapper" style={{marginTop: 10}}>

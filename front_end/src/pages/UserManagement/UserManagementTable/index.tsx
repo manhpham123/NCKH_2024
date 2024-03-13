@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 
 import "./style.scss";
-import { RuleType } from "../../../constants/types/rules.type";
+import { ItemType } from "../../../constants/types/rules.type";
 import ListButtonActionUpdate from "../../../components/ListButtonActionUpdate";
 import TableCustom from "../../../components/TableCustom";
 import { CommonGetAllParams } from "../../../constants/types/common.type";
@@ -11,6 +11,7 @@ import { dataMock } from "./mockData.config";
 import CardTitleCustom from "../../../components/CardTitleCustom";
 import { useNavigate } from "react-router-dom";
 import { USER_MANAGEMENT_DETAILS } from "../../../routes/route.constant";
+import { usePhantrang } from "../../../utils/request";
 
 
 const UserManagementTable: FC = () => {
@@ -19,6 +20,9 @@ const UserManagementTable: FC = () => {
     limit: 10,
     page: 1,
   });
+  const {data, mutate,isLoading} = usePhantrang(params);
+
+  
   const [isEditSystemParamsModalShow, SetIsEditSystemParamsModalShow] =
     useState(false);
   const [selectedRule, setSelectedRule] = useState<any>({});
@@ -38,7 +42,7 @@ const UserManagementTable: FC = () => {
       };
     })
     : [];
-  const columns: ColumnsType<RuleType> = [
+  const columns: ColumnsType<any> = [
     {
       key: 1,
       title: "Index",
@@ -50,8 +54,30 @@ const UserManagementTable: FC = () => {
     },
     {
       key: 2,
-      title: "Ip Address",
-      dataIndex: "ipAdd",
+      title: "Source IP",
+      dataIndex: "Source IP",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 3,
+      title: "Source Port",
+      dataIndex: "Source Port",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 4,
+      title: "Destination IP",
+      dataIndex: "Destination IP",
       align: "center",
       render: (group) => (
         <Tooltip title={group}>
@@ -61,6 +87,50 @@ const UserManagementTable: FC = () => {
     },
     {
       key: 5,
+      title: "Destination Port",
+      dataIndex: "Destination Port",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 6,
+      title: "Protocol",
+      dataIndex: "Protocol",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 7,
+      title: "Timestamp",
+      dataIndex: "Timestamp",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 8,
+      title: "du doan",
+      dataIndex: "label",
+      align: "center",
+      render: (group) => (
+        <Tooltip title={group}>
+          <div className="inline-text">{group}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 9,
       title: "Action",
       align: "center",
       width: "10%",
@@ -68,25 +138,26 @@ const UserManagementTable: FC = () => {
         <>
           <ListButtonActionUpdate
             editFunction={() => {}}
-            viewBlueFunction={() => navigate(`/user-management-details/${123}`)}
+            viewFunction={() => navigate(`/user-management-details/${123}`)}
           />
         </>
       ),
     },
   ];
+ 
 
   return (
     <div>
       <Card className="card-container" size="small">
         <CardTitleCustom title="List targets"/>
         <TableCustom
-          dataSource={dataTable}
+          dataSource={data?.data}
           columns={columns}
           bordered={true}
           //isLoading={!data && isLoading}
-          isLoading={false}
+          isLoading={isLoading}
           limit={params.limit || 10}
-          total={dataMock ? dataMock.total : 0}
+          total={data?.total}
           onLimitChange={(limit) => {
             setParams({ ...params, limit });
           }}

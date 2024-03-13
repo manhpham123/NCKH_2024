@@ -5,7 +5,7 @@ export type CommonGetAllParams = {
   page?: number;
   limit?: number;
 };
-export type Filter = {
+export type Itemfilter = {
   timkiem: string;
 };
 export type CommonSearchAllParams = {
