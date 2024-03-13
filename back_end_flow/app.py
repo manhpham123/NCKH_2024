@@ -72,14 +72,14 @@ async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, a
             # Tiền xử lý và dự đoán ở đây
             df_l, df_st = predict_label(collection)
             
-            total = len(df_l)
+            total = len(df_st)
             
             limit = limit
             
             page = page
             
             # Áp dụng phân trang
-            paginated_items = df_l[skip : skip + limit]
+            paginated_items = df_st[skip : skip + limit]
             
             re_ob = {
                 "data": paginated_items,
