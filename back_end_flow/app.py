@@ -119,7 +119,7 @@ async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, a
 async def read_alert():
     try:
         
-        df_l = predict_label(collection)
+        df_l, df_st = predict_label(collection)
         df_a = get_alert(df_l)
 
         
@@ -130,7 +130,62 @@ async def read_alert():
     except Exception as e:
     # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
+    
 
+@app.get("/statc/protocol", response_model=Dict)
+async def static_protocol():
+    try:
+        df_l, df_st = predict_label(collection)
+        
+        static_data = get_ls(df_st)
+        
+        sorted_pro_ls = dict(sorted(static_data.pro_ls.items(), key=lambda x:x[1], reverse=True))
+        
+        return sorted_pro_ls
+        
+        # Trả về kết quả dưới dạng JSON
+        #return df_f.to_dict(orient='records')
+    except Exception as e:
+    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@app.get("/statc/flow", response_model=Dict)
+async def static_protocol():
+    try:
+        df_l, df_st = predict_label(collection)
+        
+        static_data = get_ls(df_st)
+        
+        sorted_flw_ls = dict(sorted(static_data.ip_ls.items(), key=lambda x:x[1], reverse=True))
+        
+        
+        return sorted_flw_ls
+        
+        # Trả về kết quả dưới dạng JSON
+        #return df_f.to_dict(orient='records')
+    except Exception as e:
+    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        raise HTTPException(status_code=500, detail=str(e))
+    
+#API: http://127.0.0.1:8000/statc/service
+@app.get("/statc/service", response_model=Dict)
+async def static_protocol():
+    try:
+        df_l, df_st = predict_label(collection)
+        
+        static_data = get_ls(df_st)
+        
+        sorted_ser_ls = dict(sorted(static_data.service_ls.items(), key=lambda x:x[1], reverse=True))
+        
+        return sorted_ser_ls
+        
+        # Trả về kết quả dưới dạng JSON
+        #return df_f.to_dict(orient='records')
+    except Exception as e:
+    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        raise HTTPException(status_code=500, detail=str(e))
+    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

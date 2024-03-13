@@ -66,10 +66,10 @@ port_to_protocol = {
 }
 
 def get_protocol_name(protocol_number):
-    return protocol_numbers.get(protocol_number, str(protocol_number))
+    return protocol_numbers.get(protocol_number, "Unknown")
 
 def get_port_app_pro(port_number):
-    return port_to_protocol.get(port_number, str(port_number))
+    return port_to_protocol.get(port_number, "Unknown")
 
 # class thong ke
 class Static:
@@ -287,8 +287,7 @@ def Filter(field, value, df_st):
     filter_data = []
     for d in df_st:
         if d[field] == value:
-            filter_data.append(d)
-            
+            filter_data.append(d)      
     return filter_data
 
 #du doan bat thuong
@@ -307,7 +306,7 @@ kq =  get_alert(df_p)
 st2 = get_ls(df_st)
 
 # print(st2.ip_ls)
-# print(st2.pro_ls)
+print(st2.pro_ls)
 # print(st2.service_ls)
 
 field = 'Protocol'
