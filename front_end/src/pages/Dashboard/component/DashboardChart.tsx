@@ -3,36 +3,40 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, LineElemen
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Space, Typography } from 'antd';
 import './style.scss'
+import {useStaticService,useStaticProtocol } from "../../../utils/request/index";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, BarElement)
 function DashboardChart() {
+const {data,mutate} =  useStaticService(); 
+
+const {data:datapie} =  useStaticProtocol();
+
     const mockDataService = [
         {
-            name: 'Service 1',
-            data: 50,
+            name: 'DNS',
+            data: data?.DNS,
         },
         {
-            name: 'Service 2',
-            data: 40,
+            name: 'HTTPS',
+            data: data?.HTTPS,
         },
         {
-            name: 'Service 3',
-            data: 35,
+            name: 'SSH',
+            data: data?.SSH,
         },
         {
-            name: 'Service 4',
-            data: 30,
+            name: 'HTTP',
+            data: data?.HTTP,
         },
-        {
-            name: 'Service 5',
-            data: 28,
-        }
+        // {
+        //     name: 'Khac',
+        //     data: data?.Unknown,
+        // }
     ]
     const listServices = {
         labels: mockDataService.map(item => item.name),
         datasets: [
             {
-                label: 'Top service',
                 borderColor: 'rgba(75,192,192,1)',
                 backgroundColor: ['rgba(75,192,192,0.4)', 'rgba(255,99,132,0.4)', 'rgba(255,205,86,0.4)', 'rgba(54,162,235,0.4)', 'rgba(153,102,255,0.4)'],
                 borderWidth: 1,
@@ -55,16 +59,32 @@ function DashboardChart() {
             },
         },
     };
+    //=================== BAT DAU BIEU DO TRON========
     const dataPieChart = {
-        labels: ['Quang Huy', 'Dang Duong', 'Hoang Dat'],
+        labels: ['TCP', 'UDP'],
         datasets: [
             {
-                data: [3, 6, 9],
-                backgroundColor: ['aqua', 'orange', 'purple']
+                data: [datapie?.TCP, datapie?.UDP],
+               // data: [100, 50],
+               // backgroundColor: ['aqua', 'orange']
+                backgroundColor: ['#FF6384', '#36A2EB'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB']
             }
         ],
 
     }
+ 
+      const optionsPie = {
+        maintainAspectRatio: false,
+        responsive: true,
+        title: {
+          display: true,
+          text: 'thong ke giao thuc',
+        },
+      };
+     
+    //================ KET THUC BIEU DO TRON==============
+
     const dataLineChart: any = {
         labels: ['0.00-3.00', '3.00-6.00', '6.00-9.00', '9.00-12.00', '12.00-15.00', '15.00-18.00', '18.00-21.00','21.00-24.00'],
         datasets: [
@@ -96,23 +116,26 @@ function DashboardChart() {
             },
         }
     }
-
+   
 
     return (
         <Space className='chart-wrapper'>
             <div className='chart-item'>
-                {/* <Pie
+
+                <Pie
                     data={dataPieChart}
-                    options={options}
+                    options={optionsPie}
                     className='chart-content'
-                /> */}
-                <Typography className='chart-title'>Top services</Typography>
+                />
+
+                <Typography className='chart-title'>thong ke dich vu</Typography>
                 <Bar data={listServices} options={optionsBar} />
+                <h1>tong so</h1>
             </div>
-            <div className='chart-item'>
+            {/* <div className='chart-item'>
                 <Typography className='chart-title'>Number of access</Typography>
                 <Line data={dataLineChart} options={optionsLine} className='chart-content' />
-            </div>
+            </div> */}
         </Space>
     );
 }

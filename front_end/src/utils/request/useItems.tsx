@@ -6,6 +6,16 @@ export const useAllitem = () => {
     return {data,error,isLoading,mutate}
 }
 
+export const useStaticService = () => {
+    const {data, error, isLoading, mutate}= useSWR('/statc/service', {refreshInterval: 0});
+    return {data,error,isLoading,mutate}
+}
+
+export const useStaticProtocol = () => {
+    const {data, error, isLoading, mutate}= useSWR('/statc/protocol', {refreshInterval: 0});
+    return {data,error,isLoading,mutate}
+}
+
 export const usePhantrang = (
     params?: CommonGetAllParams,
     filter?: Itemfilter
