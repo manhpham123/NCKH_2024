@@ -91,7 +91,7 @@ db = client["cici_flow"]
 #client ip
 ip = "192.168.189.133"
 #interface 
-intf_str = "ens33"
+intf_str = "ens36"
 label_mapping = {"BENIGN": 0, "DoS Hulk": 1,'PortScan':2,'DDoS':3,'DoS GoldenEye':4,
                  'FTP-Patator':5,'SSH-Patator':6,'DoS slowloris':7,'DoS Slowhttptest':8,'Bot':9,'Web Attack-Brute Force':10,
                  'Web Attack-XSS':11,'Infiltration':12,'Web Attack-Sql Injection':13,'Heartbleed':14}
@@ -175,7 +175,7 @@ def reduce_mem_usage(df, verbose=True):
 #Tien xu li du lieu 
 def preprocess_flow(df_f):
     columns_to_drop = ['Source IP', 'Source Port', 'Destination IP', 'Protocol', 'Timestamp']
-# Bỏ các cột đã chọn khỏi dataframe
+    # Bỏ các cột đã chọn khỏi dataframe
     df = df_f.drop(columns=columns_to_drop, axis=1)
     df.head()
     df = reduce_mem_usage(df)
@@ -203,13 +203,17 @@ def preprocess_flow(df_f):
     meaningless_feature = stats_df[stats_df['Unique_values']==1]['Feature'].to_list()
     #df = df.drop(columns=meaningless_feature)
     
+    inf_cols = df.max()[df.max() == np.inf].index.to_list()
+    inf_cols
+
+    for i in inf_cols:
+        df[i] = df[i].apply(lambda x:100000000 if x == np.inf else x)
+    
     df = df[['Destination Port', 'Flow Duration', 'Total Fwd Packets', 'Total Backward Packets',
        'Total Length of Fwd Packets', 'Total Length of Bwd Packets',
        'Packet Length Variance', 'Bwd Packet Length Std', 'Max Packet Length',
        'Min Packet Length', 'Bwd Packet Length Min', 'Fwd Packet Length Max']]
 
-
-    
     ss = StandardScaler()
     df = ss.fit_transform(df)  
         
@@ -234,6 +238,7 @@ def predict_label(collection):
     
     # Thực hiện dự đoán
     pred = model.predict(df_processed)
+    
     
     df_st = df_f[['Source IP', 'Source Port', 'Destination IP', 'Destination Port', 'Protocol', 'Timestamp', 'Flow Duration']]
 
@@ -297,11 +302,12 @@ def get_alert (df_p):
         if row['label'] != 'BENIGN': 
             #row['label'] = row['label'].map(label_mapping)
             l_df_a.append(row)
-            #print(row['label'])
+            print(row['label'])
+            print(len(l_df_a))
     return l_df_a
         
-kq =  get_alert(df_p)
-
+kq =  get_alert(df_st)
+print(kq)
 
 st2 = get_ls(df_st)
 

@@ -124,10 +124,10 @@ async def read_alert():
     try:
         
         df_l, df_st = predict_label(collection)
-        df_a = get_alert(df_l)
+        df_a = get_alert(df_st)
 
         
-        return df_a[0:15]
+        return df_a
         
         # Trả về kết quả dưới dạng JSON
         #return df_f.to_dict(orient='records')
