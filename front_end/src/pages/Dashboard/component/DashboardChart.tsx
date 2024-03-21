@@ -4,9 +4,13 @@ import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Space, Typography } from 'antd';
 import './style.scss'
 import {useStaticService,useStaticProtocol } from "../../../utils/request/index";
+import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, BarElement)
 function DashboardChart() {
+
+    
 const {data,mutate} =  useStaticService(); 
 
 const {data:datapie} =  useStaticProtocol();
@@ -49,9 +53,21 @@ const {data:datapie} =  useStaticProtocol();
 
     const optionsBar: any = {
         scales: {
+            x:{
+                title:{
+                  display: true,
+                  text : 'Service',
+                  color:'red'
+                }
+              },
             y: {
+                title:{
+                    display: true,
+                    text : 'Total FLow',
+                    color:'red'
+                  },
                 beginAtZero: true,
-            },
+            }
         },
         plugins: {
             legend: {
@@ -60,6 +76,7 @@ const {data:datapie} =  useStaticProtocol();
         },
     };
     //=================== BAT DAU BIEU DO TRON========
+    /*
     const dataPieChart = {
         labels: ['TCP', 'UDP'],
         datasets: [
@@ -82,7 +99,7 @@ const {data:datapie} =  useStaticProtocol();
           text: 'thong ke giao thuc',
         },
       };
-     
+     */
     //================ KET THUC BIEU DO TRON==============
 
     const dataLineChart: any = {
@@ -116,20 +133,55 @@ const {data:datapie} =  useStaticProtocol();
             },
         }
     }
-   
+    const chartAreaBackground = {
+        id : 'tomau',
+        beforeDatasetsDraw(chart:any,args:any, plugins:any){
+          const {ctx, chartArea:{top, bottom, left,right, width, height}} = chart;
+          ctx.save();
+          ctx.fillStyle = 'grey';
+          ctx.fillRect(left,top,width,height);
+        }
+      }
+      const customepie = {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'gray' // Màu nền cho biểu đồ
+        },
+        title: {
+            text: 'Thống kê giao thức'
+           
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'số lượng flow',
+            data: [
+                ['TCP', datapie?.TCP],
+                ['UDP', datapie?.UDP]
+            ]
+        }]
+    };
+  
 
     return (
         <Space className='chart-wrapper'>
             <div className='chart-item'>
-
+{/* 
                 <Pie
                     data={dataPieChart}
                     options={optionsPie}
                     className='chart-content'
-                />
+                /> */}
+                 <HighchartsReact highcharts={Highcharts} options={customepie} />       
 
                 <Typography className='chart-title'>thong ke dich vu</Typography>
-                <Bar data={listServices} options={optionsBar} />
+                <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
                 <h1>tong so</h1>
             </div>
             {/* <div className='chart-item'>
