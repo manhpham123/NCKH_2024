@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 
 import "./style.scss";
-import { ItemType } from "../../../constants/types/rules.type";
+import { FlowType } from "../../../constants/types/rules.type";
 import ListButtonActionUpdate from "../../../components/ListButtonActionUpdate";
 import TableCustom from "../../../components/TableCustom";
 import { CommonGetAllParams } from "../../../constants/types/common.type";
@@ -35,7 +35,7 @@ const RulesTable: FC = () => {
       };
     })
     : [];
-  const columns: ColumnsType<ItemType> = [
+  const columns: ColumnsType<FlowType> = [
     {
       key: 1,
       title: "Index",

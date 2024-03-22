@@ -7,7 +7,7 @@ import Icons from "../../../../assets/icons";
 import DashboardGeneralItem from "../../../Dashboard/component/DashboardGeneralItem";
 import DboardTopCardItem from "../../../Dashboard/component/DboardTopCardItem";
 
-const UserMnDashboard = () => {
+const AgentMnDashboard = () => {
   const dispatch = useDispatch();
   return (
     <div className="customers-wrapper">
@@ -25,4 +25,4 @@ const UserMnDashboard = () => {
   );
 };
 
-export default UserMnDashboard;
+export default AgentMnDashboard;

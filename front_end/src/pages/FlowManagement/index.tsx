@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
-import UserManagementTable from "./UserManagementTable";
+import FLowManagementTable from "./FLowManagementTable";
 import { useDispatch } from "react-redux";
-import { USER_MANAGEMENT } from "../../routes/route.constant";
+import { FLOW_MANAGEMENT } from "../../routes/route.constant";
 import { setSelectedBreadCrumb } from "../App/store/appSlice";
-import UserManagementFilter from "./UsermanagementFilter";
+import FLowManagementFilter from "./FlowmanagementFilter";
 
-const UserManagement = () => {
+const FlowManagement = () => {
   const [filter, setFilter]= useState<any>({})
   const dispatch = useDispatch();
   useEffect(() => {
     let breadCrumb = [
        {
-        label: "User management",
+        label: "FLow management",
         path: ""
        }
     ]
     dispatch(setSelectedBreadCrumb(breadCrumb))
-  },[USER_MANAGEMENT]) 
+  },[FLOW_MANAGEMENT]) 
   return (
     <div className="container-wrapper">
       <div style={{marginBottom: "12px"}}>
-        <UserManagementFilter filters={filter} setFilters={setFilter}/>
+        <FLowManagementFilter filters={filter} setFilters={setFilter}/>
       </div>
-       <UserManagementTable />
+       <FLowManagementTable />
     </div>
   );
 };
 
-export default UserManagement;
+export default FlowManagement;

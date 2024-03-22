@@ -4,19 +4,19 @@ import { useParams } from "react-router-dom";
 import { Tabs } from "antd";
 import Rules from "../Keys";
 import { useDispatch } from "react-redux";
-import { USER_MANAGEMENT, USER_MANAGEMENT_DETAILS } from "../../routes/route.constant";
+import { AGENT_MANAGEMENT, AGENT_MANAGEMENT_DETAILS } from "../../routes/route.constant";
 import { setSelectedBreadCrumb } from "../App/store/appSlice";
 import Logs from "./components/Logs";
-import UserMnDashboard from "./components/UserMnDashboard";
+import AgentMnDashboard from "./components/AgentMnDashboard";
 
-const UserManagementDetail = () => {
+const AgentManagementDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
     let breadCrumb = [
       {
-        label: "User managerment",
-        path: USER_MANAGEMENT
+        label: "agent managerment",
+        path: AGENT_MANAGEMENT
       },
       {
         label: `${id}`,
@@ -24,12 +24,12 @@ const UserManagementDetail = () => {
       }
     ]
     dispatch(setSelectedBreadCrumb(breadCrumb));
-  }, [USER_MANAGEMENT_DETAILS])
+  }, [AGENT_MANAGEMENT_DETAILS])
   console.log(id);
   const items = [{
     label: "Statistic",
     key: "Statistic",
-    children: <UserMnDashboard />,
+    children: <AgentMnDashboard />,
   },
   {
     label: "Events",
@@ -44,9 +44,9 @@ const UserManagementDetail = () => {
 
   return (
     <div className="container-wrapper">
-      <Tabs items={items} className="userManagementDetailsTab"/>
+      <Tabs items={items} className="agentManagementDetailsTab"/>
     </div>
   );
 };
 
-export default UserManagementDetail;
+export default AgentManagementDetail;

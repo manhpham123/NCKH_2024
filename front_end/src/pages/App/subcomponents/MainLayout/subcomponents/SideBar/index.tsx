@@ -9,7 +9,8 @@ import {
   DASHBOARD,
   LOG,
   RULE,
-  USER_MANAGEMENT,
+  FLOW_MANAGEMENT,
+  AGENT_MANAGEMENT
 } from "../../../../../../routes/route.constant";
 import { Link } from "react-router-dom";
 
@@ -39,10 +40,12 @@ const items: MenuItem[] = [
   //   getItem('Option 3', '3'),
   //   getItem('Option 4', '4'),
   // ]),
-  getItem(<Link to={USER_MANAGEMENT}>Management</Link>, '2', <ApartmentOutlined />),
+  getItem(<Link to={FLOW_MANAGEMENT}>Flow Management</Link>, '2', <ApartmentOutlined />),
   // getItem(<Link to={RULE}>Rule</Link>, '5', <LockFilled />),
   // getItem(<Link to={LOG}>Logs</Link>, '6', <FileTextOutlined />),
-  getItem(<Link to={SETTING}>Setting</Link>, '3', <SettingFilled />),
+
+  getItem(<Link to={AGENT_MANAGEMENT}>Agent Management</Link>, '3', <AppstoreFilled />),
+  getItem(<Link to={SETTING}>Setting</Link>, '4', <SettingFilled />),
 ];
 export const SideBar: React.FC = () => {
   return (
