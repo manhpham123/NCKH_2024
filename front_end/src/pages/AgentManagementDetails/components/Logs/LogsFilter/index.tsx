@@ -33,7 +33,7 @@ const LogsFilter: React.FC<Props> = ({ filters, setFilters }) => {
       key: '1',
       label: "Filter",
       children: (
-        <Form className="userManager-FilterForm" layout="horizontal">
+        <Form className="agentManager-FilterForm" layout="horizontal">
           <Space direction="horizontal" style={{ width: '100%' }}>
             <Form.Item label="IP source">
               <Input placeholder="IP source ..." />

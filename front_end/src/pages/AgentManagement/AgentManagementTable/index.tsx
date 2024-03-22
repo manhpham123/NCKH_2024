@@ -3,26 +3,47 @@ import { FC, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 
 import "./style.scss";
-import { ItemType } from "../../../constants/types/rules.type";
+import { IpType } from "../../../constants/types/rules.type";
 import ListButtonActionUpdate from "../../../components/ListButtonActionUpdate";
 import TableCustom from "../../../components/TableCustom";
 import { CommonGetAllParams } from "../../../constants/types/common.type";
 import { dataMock } from "./mockData.config";
 import CardTitleCustom from "../../../components/CardTitleCustom";
 import { useNavigate } from "react-router-dom";
-import { USER_MANAGEMENT_DETAILS } from "../../../routes/route.constant";
+//import { USER_MANAGEMENT_DETAILS } from "../../../routes/route.constant";
 import { usePhantrang } from "../../../utils/request";
-import { Itemfilter } from "../../../constants/types/common.type";
+import { Ipfilter } from "../../../constants/types/common.type";
 
-const UserManagementTable: FC = () => {
+const AgentManagementTable: FC = () => {
   const navigate = useNavigate();
+  /* =========== SAU NAY LIST DANH SACH IP PHAN TRANG O DAY==============
   const [params, setParams] = useState<CommonGetAllParams>({
     limit: 10,
     page: 1,
   });
   const {data, mutate,isLoading} = usePhantrang(params);
-
+*/
+/*================ DU LIEU MAU, backend tra ve dang nay=============*/
+const [params, setParams] = useState<CommonGetAllParams>({
+  limit: 10,
+  page: 1,
+});
+const isLoading = false
+const Danhsachip = {
+  "data": 
+  [
+  {'ip':'192.168.10.1','id':1},
+  {'ip':'192.168.10.2','id':2},
+  {'ip':'192.168.10.3','id':3},
+  {'ip':'192.168.10.4','id':4},
+  {'ip':'192.168.10.5','id':5},
+                          ],
+      "limit": 5,
+      "page": 1,
+      "total": 10
+    }
   
+  //=================== KET THUC DU LIEU MAU===================
   const [isEditSystemParamsModalShow, SetIsEditSystemParamsModalShow] =
     useState(false);
   const [selectedRule, setSelectedRule] = useState<any>({});
@@ -34,14 +55,14 @@ const UserManagementTable: FC = () => {
     setSelectedRule(record);
   };
   // const { data, isLoading, error, mutate } = useSystemParams(params, filter);
-  const dataTable = dataMock.data
-    ? dataMock.data.map((item: any) => {
-      return {
-        ...item,
-        key: item.id,
-      };
-    })
-    : [];
+  // const dataTable = dataMock.data
+  //   ? dataMock.data.map((item: any) => {
+  //     return {
+  //       ...item,
+  //       key: item.id,
+  //     };
+  //   })
+  //   : [];
   const columns: ColumnsType<any> = [
     {
       key: 1,
@@ -54,8 +75,8 @@ const UserManagementTable: FC = () => {
     },
     {
       key: 2,
-      title: "Source IP",
-      dataIndex: "Source IP",
+      title: "dia chi ip",
+      dataIndex: "ip",
       align: "center",
       render: (group) => (
         <Tooltip title={group}>
@@ -65,72 +86,6 @@ const UserManagementTable: FC = () => {
     },
     {
       key: 3,
-      title: "Source Port",
-      dataIndex: "Source Port",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 4,
-      title: "Destination IP",
-      dataIndex: "Destination IP",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 5,
-      title: "Destination Port",
-      dataIndex: "Destination Port",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 6,
-      title: "Protocol",
-      dataIndex: "Protocol",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 7,
-      title: "Timestamp",
-      dataIndex: "Timestamp",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 8,
-      title: "du doan",
-      dataIndex: "label",
-      align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 9,
       title: "Action",
       align: "center",
       width: "10%",
@@ -138,7 +93,7 @@ const UserManagementTable: FC = () => {
         <>
           <ListButtonActionUpdate
             editFunction={() => {}}
-            viewFunction={() => navigate(`/user-management-details/${123}`)}
+            viewFunction={() => navigate(`/agent-management-details/${123}`)}
           />
         </>
       ),
@@ -151,13 +106,13 @@ const UserManagementTable: FC = () => {
       <Card className="card-container" size="small">
         <CardTitleCustom title="List flows"/>
         <TableCustom
-          dataSource={data?.data}
+          dataSource={Danhsachip?.data}
           columns={columns}
           bordered={true}
           //isLoading={!data && isLoading}
           isLoading={isLoading}
-          limit={params.limit || 10}
-          total={data?.total}
+          limit={Danhsachip.limit || 10}
+          total={Danhsachip?.total}
           onLimitChange={(limit) => {
             setParams({ ...params, limit });
           }}
@@ -171,4 +126,4 @@ const UserManagementTable: FC = () => {
   );
 };
 
-export default UserManagementTable;
+export default AgentManagementTable;

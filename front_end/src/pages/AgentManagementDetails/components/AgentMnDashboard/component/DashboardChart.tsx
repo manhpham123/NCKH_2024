@@ -5,7 +5,7 @@ import { Space, Typography } from 'antd';
 import './style.scss'
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, BarElement)
-function UserMnDashboardChart() {
+function AgentMnDashboardChart() {
     const dataPieChart = {
         labels: ['Quang Huy', 'Dang Duong', 'Hoang Dat'],
         datasets: [
@@ -68,4 +68,4 @@ function UserMnDashboardChart() {
     );
 }
 
-export default UserMnDashboardChart
+export default AgentMnDashboardChart

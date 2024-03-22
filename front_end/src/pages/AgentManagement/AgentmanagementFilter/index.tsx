@@ -11,16 +11,16 @@ import {
 import "./style.scss";
 import React, { useEffect, useState } from "react";
 import ButtonCustom from "../../../components/ButtonCustom";
-import { Itemfilter } from "../../../constants/types/common.type";
+import { Ipfilter } from "../../../constants/types/common.type";
 
 type Props = {
-  filters: Itemfilter;
-  setFilters: (filters: Itemfilter) => void;
+  filters: Ipfilter;
+  setFilters: (filters: Ipfilter) => void;
 };
 
 
-const UserManagementFilter: React.FC<Props> = ({ filters, setFilters }) => {
-const [filterData, setFilterData] = useState<Itemfilter>({});
+const AgentManagementFilter: React.FC<Props> = ({ filters, setFilters }) => {
+const [filterData, setFilterData] = useState<Ipfilter>({});
 
   useEffect(() => {
     if (filters) {
@@ -29,7 +29,7 @@ const [filterData, setFilterData] = useState<Itemfilter>({});
   }, [filters]);
 
   return (
-    <Form className="userManager-FilterForm" layout="vertical">
+    <Form className="agentManager-FilterForm" layout="vertical">
       <Space direction="horizontal" style={{width: '100%'}}>
 
         {/* <Form.Item label="chon truong">
@@ -58,4 +58,4 @@ const [filterData, setFilterData] = useState<Itemfilter>({});
   );
 };
 
-export default UserManagementFilter;
+export default AgentManagementFilter;

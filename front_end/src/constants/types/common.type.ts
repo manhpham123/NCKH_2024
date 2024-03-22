@@ -5,11 +5,14 @@ export type CommonGetAllParams = {
   page?: number;
   limit?: number;
 };
-export type Itemfilter = {
+export type Flowfilter = {
   SourceIp?: string;
   SourcePort?:string;
   DestinationIP?:string;
   DestinationPort?:string;
+};
+export type Ipfilter = {
+  Ip?: string;
 };
 export type CommonSearchAllParams = {
   page?: number;
