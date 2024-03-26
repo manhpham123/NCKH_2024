@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../utils/request";
 import {Alertfilter } from "../../../constants/types/common.type";
 
+
 const AlertTable: FC = () => {
   const navigate = useNavigate();
   const [params, setParams] = useState<CommonGetAllParams>({
@@ -22,6 +23,7 @@ const AlertTable: FC = () => {
   });
   //const {data, mutate,isLoading} = useAlert(params);
   const isLoading = false
+  //BruceForce  DDoS  UnknowAttack PortScan
   const Danhsachalert = {
     "data": [
       {
@@ -32,7 +34,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:08:38",
         "Flow Duration": 130003,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -42,7 +44,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:11",
         "Flow Duration": 338916,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -52,7 +54,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:12",
         "Flow Duration": 11404,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -62,7 +64,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:44",
         "Flow Duration": 196447,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -72,7 +74,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:45",
         "Flow Duration": 488958,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -82,7 +84,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:46",
         "Flow Duration": 84728,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -92,7 +94,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:09:46",
         "Flow Duration": 150378,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -102,7 +104,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:08:55",
         "Flow Duration": 66999329,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -112,7 +114,7 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:10:17",
         "Flow Duration": 377915,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       },
       {
         "Source IP": "192.168.190.15",
@@ -122,13 +124,16 @@ const AlertTable: FC = () => {
         "Protocol": 6,
         "Timestamp": "2024-03-22 22:10:18",
         "Flow Duration": 52,
-        "label": "DDoS"
+        "label": "UnknowAttack"
       }
     ],
-    "limit": 10,
+    "limit": 15,
     "page": 1,
     "total": 629
   }
+  
+  
+  
   
   const [isEditSystemParamsModalShow, SetIsEditSystemParamsModalShow] =
     useState(false);
@@ -149,6 +154,13 @@ const AlertTable: FC = () => {
   //     };
   //   })
   //   : [];
+  const predictionColors: { [key: string]: string } = {
+    DDoS: 'red', // Màu đỏ cho DDoS
+    PortScan: '#CD853F', // Màu vàng cho PortScan (ví dụ)
+    BruceForce : '#FFD700', 
+    UnknowAttack:'#0000FF' 
+    
+  };
   const columns: ColumnsType<any> = [
     {
       key: 1,
@@ -252,15 +264,29 @@ const AlertTable: FC = () => {
       title: "Dự đoán",
       dataIndex: "label",
       align: "center",
-      render: (group) => {
-        const isDdos = group === "DDoS";
+      render: (group: string) => {
+        const color = predictionColors[group] || ''; // Lấy màu sắc tương ứng từ bảng mã màu
         return (
           <Tooltip title={group}>
-            <div className={`inline-text ${isDdos ? 'ddos-column' : ''}`}>{group}</div>
+            <div className={`inline-text ${color ? 'prediction-column' : ''}`} style={{ backgroundColor: color }}>{group}</div>
           </Tooltip>
         );
       },
     },
+    // {
+    //   key: 9,
+    //   title: "Dự đoán",
+    //   dataIndex: "label",
+    //   align: "center",
+    //   render: (group) => {
+    //     const isDdos = group === "DDoS";
+    //     return (
+    //       <Tooltip title={group}>
+    //         <div className={`inline-text ${isDdos ? 'ddos-column' : ''}`}>{group}</div>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
     // {
     //   key: 9,
     //   title: "Action",
@@ -288,7 +314,7 @@ const AlertTable: FC = () => {
           bordered={true}
           //isLoading={!data && isLoading}
           isLoading={isLoading}
-          limit={params.limit || 10}
+          limit={params.limit || 15 }
           total={Danhsachalert?.total}
           onLimitChange={(limit) => {
             setParams({ ...params, limit });
