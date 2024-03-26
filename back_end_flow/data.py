@@ -13,6 +13,8 @@ import warnings
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import time
 from sklearn.preprocessing import normalize
+#import keras
+
 
 protocol_numbers = {
     1: "ICMP",          # Internet Control Message Protocol
@@ -100,7 +102,10 @@ reverse_label_mapping = {value: key for key, value in label_mapping.items()}
 collection = db[f"flow_data_{ip}_{intf_str}"]
 
 #load model
-model = joblib.load("rfc.joblib")
+model = joblib.load("random_forest_model.joblib")
+
+#model = keras.models.load_model('rfc1.md5')
+
 
 #CSDL 
 def read_all_data(collection_name):
@@ -298,25 +303,33 @@ def Filter(field, value, df_st):
 #du doan bat thuong
 def get_alert (df_p):
     l_df_a = []
+    sum_sql_dos = 0
+    sum_sql = 0
     for row in df_p:
-        if row['label'] != 'BENIGN': 
+        if row['label'] != 'BENIGN' and row["Destination Port"] != 27017 and row["Source Port"] != 27017: 
             #row['label'] = row['label'].map(label_mapping)
             l_df_a.append(row)
-            print(row['label'])
+            print(row['label'], row["Destination Port"])
             print(len(l_df_a))
+        if row["Destination Port"] == 27017 and row['label'] != 'BENIGN':
+            sum_sql_dos += 1
+        if row["Destination Port"] == 27017:
+            sum_sql += 1
+    print(sum_sql_dos)
+    print(sum_sql_dos/sum_sql)   
     return l_df_a
         
 kq =  get_alert(df_st)
-print(kq)
+#print(kq)
 
-st2 = get_ls(df_st)
+# st2 = get_ls(df_st)
 
-# print(st2.ip_ls)
-print(st2.pro_ls)
-# print(st2.service_ls)
+# # print(st2.ip_ls)
+# print(st2.pro_ls)
+# # print(st2.service_ls)
 
-field = 'Protocol'
-value = 17
+# field = 'Protocol'
+# value = 17
 
 #print(Filter(field, value, df_st))
 
