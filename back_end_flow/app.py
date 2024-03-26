@@ -119,21 +119,53 @@ async def read_items(page: int = Query(1, alias="page"), limit: int = Query(1, a
         # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.get("/alert/", response_model=List[dict])
-async def read_alert():
+@app.get("/alert/", response_model=Dict)
+async def read_alert(page: int = Query(1, alias="page"), limit: int = Query(1, alias="limit")):
     try:
         
+        skip = (page - 1) * limit
+        # Tiền xử lý và dự đoán ở đây
         df_l, df_st = predict_label(collection)
-        df_a = get_alert(df_st)
-
         
-        return df_a
+        df_a = get_alert(df_st)
+        
+        total = len(df_a)
+        
+        limit = limit
+        
+        page = page
+        
+        # Áp dụng phân trang
+        paginated_items = df_a[skip : skip + limit]
+        
+        re_ob = {
+            "data": paginated_items,
+            "limit": limit,
+            "page": page,
+            "total": total
+        }
         
         # Trả về kết quả dưới dạng JSON
-        #return df_f.to_dict(orient='records')
+        return re_ob
     except Exception as e:
-    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        # Nếu có lỗi, trả về thông báo lỗi với status code 500
         raise HTTPException(status_code=500, detail=str(e))
+
+# @app.get("/alert/", response_model=List[dict])
+# async def read_alert():
+#     try:
+        
+#         df_l, df_st = predict_label(collection)
+#         df_a = get_alert(df_st)
+
+        
+#         return df_a[-100:]
+        
+#         # Trả về kết quả dưới dạng JSON
+#         #return df_f.to_dict(orient='records')
+#     except Exception as e:
+#     # Nếu có lỗi, trả về thông báo lỗi với status code 500
+#         raise HTTPException(status_code=500, detail=str(e))
     
 
 @app.get("/statc/protocol", response_model=Dict)
