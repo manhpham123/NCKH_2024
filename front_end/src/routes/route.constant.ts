@@ -14,3 +14,4 @@ export const DASHBOARD = '/dashboard';
 //export const FLOW_MANAGEMENT_DETAILS = "/user-management-details/:id";
 export const AGENT_MANAGEMENT= "/agent-management";
 export const AGENT_MANAGEMENT_DETAILS  = "/agent-management-details/:id";
+export const ALERT = "/alert";

@@ -34,9 +34,9 @@ const Dashboard = () => {
   
   return (
     <div className="customers-wrapper">
-      <Space direction="horizontal" className="dasboard-gn-wrapper">
+      {/* <Space direction="horizontal" className="dasboard-gn-wrapper">
         <DashboardGeneralItem title="Số service" value={4} icon={<Icons.bell />} />
-      </Space>
+      </Space> */}
 
       {/* ve bieu do cot o day va duong o day */}
       <DashboardChart />

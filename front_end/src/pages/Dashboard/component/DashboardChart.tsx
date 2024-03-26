@@ -37,19 +37,7 @@ const {data:datapie} =  useStaticProtocol();
         //     data: data?.Unknown,
         // }
     ]
-    const listServices = {
-        labels: mockDataService.map(item => item.name),
-        datasets: [
-            {
-                borderColor: 'rgba(75,192,192,1)',
-                backgroundColor: ['rgba(75,192,192,0.4)', 'rgba(255,99,132,0.4)', 'rgba(255,205,86,0.4)', 'rgba(54,162,235,0.4)', 'rgba(153,102,255,0.4)'],
-                borderWidth: 1,
-                hoverBackgroundColor: ['rgba(75,192,192,0.6)', 'rgba(255,99,132,0.6)', 'rgba(255,205,86,0.6)', 'rgba(54,162,235,0.6)', 'rgba(153,102,255,0.6)'],
-                hoverBorderColor: 'rgba(75,192,192,1)',
-                data: mockDataService.map(item => item.data),
-            },
-        ],
-    };
+  
 
     const optionsBar: any = {
         scales: {
@@ -145,45 +133,86 @@ const {data:datapie} =  useStaticProtocol();
       const customepie = {
         chart: {
             type: 'pie',
-            backgroundColor: 'gray' // Màu nền cho biểu đồ
+            backgroundColor: 'white' // Màu nền cho biểu đồ
         },
         title: {
-            text: 'Thống kê giao thức'
+            text: 'Thống kê tấn công'
            
         },
         plotOptions: {
             pie: {
                 dataLabels: {
                     enabled: true,
-                    format: '{point.name}: {point.percentage:.1f} %'
+                    format: '{point.name}: {point.percentage:.1f} %',
+                    style: {
+                        fontSize: '16px' // Đặt kích thước font chữ ở đây
+                    }
                 }
             }
         },
         series: [{
             name: 'số lượng flow',
             data: [
-                ['TCP', datapie?.TCP],
-                ['UDP', datapie?.UDP]
+                ['Normal',500],
+                ['Ddos', 50],
+                ['PortScan', 40],
+                ['BruceForce', 30],
             ]
         }]
     };
-  
+    const options = {
+        chart: {
+            type: 'column',
+            backgroundColor: 'white' // Màu nền cho biểu đồ
+        },
+        title: {
+            text: 'Thống kê tấn công theo từng máy'
+        },
+        xAxis: {
+            categories: ['192.168.10.1', '192.168.10.2', '192.168.10.3', '192.168.10.4','192.168.10.5']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'FLow'
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+        series: [ {
+            name: 'Ddos',
+            data: [50,40,30,20,15]
+        }, {
+            name: 'PortScan',
+            data: [60,40,50,30,45]
+        },
+        {
+            name: 'BruceForce',
+            data: [50,40,50,30,45]
+        },
+        {
+            name: 'Normal',
+            data: [100,90,80,70,60]
+        }
+    ]
+    };
 
     return (
         <Space className='chart-wrapper'>
-            <div className='chart-item'>
-{/* 
-                <Pie
-                    data={dataPieChart}
-                    options={optionsPie}
-                    className='chart-content'
-                /> */}
-                 <HighchartsReact highcharts={Highcharts} options={customepie} />       
+            <div className='chart-item'>      
 
-                <Typography className='chart-title'>thong ke dich vu</Typography>
-                <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
-                <h1>tong so</h1>
+    <div >
+        <HighchartsReact highcharts={Highcharts} options={customepie} />
+    </div>
+    <div className='chart-container'>
+        <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+                
             </div>
+
             {/* <div className='chart-item'>
                 <Typography className='chart-title'>Number of access</Typography>
                 <Line data={dataLineChart} options={optionsLine} className='chart-content' />

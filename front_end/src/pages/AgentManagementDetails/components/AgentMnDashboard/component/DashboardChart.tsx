@@ -3,9 +3,25 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, LineElemen
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Space, Typography } from 'antd';
 import './style.scss'
+import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts';
+import  { FC } from "react";
+import {useStaticService,useStaticProtocol } from "../../../../../utils/request/index";
+type Props = {
+    id?:string;
+  }
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, BarElement)
-function AgentMnDashboardChart() {
+//function AgentMnDashboardChart() {
+const AgentMnDashboardChart: FC<Props> = ({ id }) => {
+    // ========thong ke du lieu cua tung ip theo cai id ta truyen vao
+  console.log(id)
+  //=============== data goi API
+  const {data,mutate} =  useStaticService(); 
+
+  const {data:datapie} =  useStaticProtocol();
+  //================
+
     const dataPieChart = {
         labels: ['Quang Huy', 'Dang Duong', 'Hoang Dat'],
         datasets: [
@@ -49,21 +65,168 @@ function AgentMnDashboardChart() {
             },
         }
     }
-
+    const customepie = {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'white' // Màu nền cho biểu đồ
+        },
+        title: {
+            text: 'Thống kê Protocol'
+           
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}: {point.percentage:.1f} %',
+                    style: {
+                        fontSize: '16px' // Đặt kích thước font chữ ở đây
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'số lượng flow',
+            data: [
+                ['TCP', datapie?.TCP],
+                ['UDP', datapie?.UDP]
+            ]
+        }]
+    };
+    
+    const customepieactack = {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'white' // Màu nền cho biểu đồ
+        },
+        title: {
+            text: 'Thống kê tấn công'
+           
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}: {point.percentage:.1f} %',
+                    style: {
+                        fontSize: '16px' // Đặt kích thước font chữ ở đây
+                    }
+                }
+                
+            }
+        },
+        series: [{
+            name: 'số lượng flow',
+            data: [
+                ['Normal',100],
+                ['Ddos', 10],
+                ['PortScan', 20],
+                ['BruceForce', 15],
+            ]
+        }]
+    };
+    const mockDataService = [
+        {
+            name: 'DNS',
+            data: data?.DNS,
+        },
+        {
+            name: 'HTTPS',
+            data: data?.HTTPS,
+        },
+        {
+            name: 'SSH',
+            data: data?.SSH,
+        },
+        {
+            name: 'HTTP',
+            data: data?.HTTP,
+        },
+        // {
+        //     name: 'Khac',
+        //     data: data?.Unknown,
+        // }
+    ]
+    const listServices = {
+        labels: mockDataService.map(item => item.name),
+        datasets: [
+            {
+                borderColor: 'rgba(75,192,192,1)',
+                backgroundColor: ['rgba(75,192,192,0.4)', 'rgba(255,99,132,0.4)', 'rgba(255,205,86,0.4)', 'rgba(54,162,235,0.4)', 'rgba(153,102,255,0.4)'],
+                borderWidth: 1,
+                hoverBackgroundColor: ['rgba(75,192,192,0.6)', 'rgba(255,99,132,0.6)', 'rgba(255,205,86,0.6)', 'rgba(54,162,235,0.6)', 'rgba(153,102,255,0.6)'],
+                hoverBorderColor: 'rgba(75,192,192,1)',
+                data: mockDataService.map(item => item.data),
+            },
+        ],
+    };
+    const optionsBar: any = {
+        scales: {
+            x:{
+                title:{
+                  display: true,
+                  text : 'Service',
+                  color:'red',
+                  font: {
+                    size: 16 // Đặt kích thước font chữ ở đây
+                }
+                }
+              },
+            y: {
+                title:{
+                    display: true,
+                    text : 'FLow',
+                    color:'red',
+                    font: {
+                        size: 16 // Đặt kích thước font chữ ở đây
+                    }
+                  },
+                beginAtZero: true,
+            }
+        },
+        plugins: {
+            legend: {
+                display: false,
+            },
+        },
+    };
+    const chartAreaBackground = {
+        id : 'tomau',
+        beforeDatasetsDraw(chart:any,args:any, plugins:any){
+          const {ctx, chartArea:{top, bottom, left,right, width, height}} = chart;
+          ctx.save();
+          ctx.fillStyle = 'white';
+          ctx.fillRect(left,top,width,height);
+        }
+      }
     return (
         <Space className='chart-wrapper'>
             <div className='chart-item'>
 
-                <Typography className='chart-title'>Access enpoint</Typography>
-                <Pie
-                    data={dataPieChart}
-                    className='chart-content'
-                />
+            <Typography className='chart-title'>Thống kê service</Typography>
+
+            <div>
+            <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
+            </div>
+
+            <div className='chart-container'>
+            <HighchartsReact highcharts={Highcharts} options={customepie} />
+            </div>
+            
+            <div className='chart-container'>
+            <HighchartsReact highcharts={Highcharts} options={customepieactack} /> 
+            </div>  
+
+            </div>
+            {/* <div className='chart-item'>
+                <Typography className='chart-title'>Number of access</Typography>
+                <Line data={dataLineChart} options={optionsLine} className='chart-content' />
             </div>
             <div className='chart-item'>
                 <Typography className='chart-title'>Number of access</Typography>
                 <Line data={dataLineChart} options={optionsLine} className='chart-content' />
-            </div>
+                        <Typography className='chart-title'>Thong ke tan cong</Typography>
+            </div> */}
         </Space>
     );
 }

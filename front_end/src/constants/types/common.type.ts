@@ -11,6 +11,12 @@ export type Flowfilter = {
   DestinationIP?:string;
   DestinationPort?:string;
 };
+export type Alertfilter = {
+  SourceIp?: string;
+  SourcePort?:string;
+  DestinationIP?:string;
+  DestinationPort?:string;
+};
 export type Ipfilter = {
   Ip?: string;
 };
