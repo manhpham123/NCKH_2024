@@ -1,0 +1,18 @@
+.categories-administratives-table-container {
+  .inline-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.page-container {
+  .ant-card-body .total-Page-SystemParam {
+    position: absolute;
+    bottom: 12px;
+    left: 100px;
+  }
+}
+.ddos-column {
+  background-color:red; /* hoặc bất kỳ kiểu dáng nào khác để làm nổi bật */
+}

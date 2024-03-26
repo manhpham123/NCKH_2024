@@ -27,17 +27,17 @@ const AgentManagementDetail = () => {
   }, [AGENT_MANAGEMENT_DETAILS])
   console.log(id);
   const items = [{
-    label: "Statistic",
+    label: "Thong ke",
     key: "Statistic",
     children: <AgentMnDashboard />,
   },
   {
-    label: "Events",
+    label: "Log",
     key: "Events",
     children: <Logs />,
   },
   {
-    label: "Custom rules",
+    label: "Rules",
     key: "ruleCustom",
     children: <Rules />,
   }]

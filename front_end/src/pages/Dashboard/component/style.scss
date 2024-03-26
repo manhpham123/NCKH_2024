@@ -1,7 +1,9 @@
 .chart-wrapper{
     height: 100%;
     width: 100%;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     .ant-space-item{
         background-color: white;
         width: 49%;
@@ -10,6 +12,7 @@
         .chart-item{
             width: 100%;
             height: 100%;
+            margin: auto;
             .ant-space-item{
                 width: 100%;
             }
@@ -25,4 +28,7 @@
             height: 82% !important;
         }
     }
+}
+.chart-container {
+  margin-top: 50px;
 }

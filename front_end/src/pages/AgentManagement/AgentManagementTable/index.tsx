@@ -1,4 +1,4 @@
-import { Card, Tooltip, Typography } from "antd";
+import { Card, Switch, Tooltip, Typography } from "antd";
 import { FC, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 
@@ -86,25 +86,38 @@ const Danhsachip = {
     },
     {
       key: 3,
-      title: "Action",
+      title: "Status",
+      align: "center",
+      width: "10%",
+      render: (_, record) => (
+        <>
+      <Switch defaultValue={true}/>
+        </>
+      ),
+    },
+    {
+      key: 4,
+      title: "Chi tiet",
       align: "center",
       width: "10%",
       render: (_, record) => (
         <>
           <ListButtonActionUpdate
-            editFunction={() => {}}
-            viewFunction={() => navigate(`/agent-management-details/${123}`)}
+            // editFunction={() => {}}
+            viewFunction={() => navigate(`/agent-management-details/${record.id}`)}
           />
+          
         </>
       ),
-    },
+    }
+
   ];
  
 
   return (
     <div>
       <Card className="card-container" size="small">
-        <CardTitleCustom title="List flows"/>
+        <CardTitleCustom title="List agent"/>
         <TableCustom
           dataSource={Danhsachip?.data}
           columns={columns}

@@ -10,7 +10,8 @@ import {
   LOG,
   RULE,
   FLOW_MANAGEMENT,
-  AGENT_MANAGEMENT
+  AGENT_MANAGEMENT,
+  ALERT
 } from "../../../../../../routes/route.constant";
 import { Link } from "react-router-dom";
 
@@ -45,7 +46,8 @@ const items: MenuItem[] = [
   // getItem(<Link to={LOG}>Logs</Link>, '6', <FileTextOutlined />),
 
   getItem(<Link to={AGENT_MANAGEMENT}>Agent Management</Link>, '3', <AppstoreFilled />),
-  getItem(<Link to={SETTING}>Setting</Link>, '4', <SettingFilled />),
+  getItem(<Link to={ALERT}>Alert</Link>, '4', <AppstoreFilled />),
+  getItem(<Link to={SETTING}>Setting</Link>, '5', <SettingFilled />),
 ];
 export const SideBar: React.FC = () => {
   return (

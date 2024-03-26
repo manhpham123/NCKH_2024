@@ -9,9 +9,12 @@ import { CommonGetAllParams } from "../../../../../constants/types/common.type";
 import { IpType } from "../../../../../constants/types/rules.type";
 import CardTitleCustom from "../../../../../components/CardTitleCustom";
 import TableCustom from "../../../../../components/TableCustom";
-
-
-const LogsTable: FC = () => {
+type Props = {
+  id?:string;
+}
+const LogsTable: FC<Props> = ({id}) => {
+  //=========== lay ra id cua ip
+  console.log(id);
   const [params, setParams] = useState<CommonGetAllParams>({
     limit: 10,
     page: 1,
