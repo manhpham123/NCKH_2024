@@ -18,12 +18,13 @@ import {Alertfilter } from "../../../constants/types/common.type";
 const AlertTable: FC = () => {
   const navigate = useNavigate();
   const [params, setParams] = useState<CommonGetAllParams>({
-    limit: 5,
+    limit: 10,
     page: 1,
   });
-  //const {data, mutate,isLoading} = useAlert(params);
-  const isLoading = false
-  //BruceForce  DDoS  UnknowAttack PortScan
+  const {data, mutate,isLoading} = useAlert(params);
+  
+  /*
+  BruceForce  DDoS  UnknowAttack PortScan
   const Danhsachalert = {
     "data": [
       {
@@ -131,7 +132,7 @@ const AlertTable: FC = () => {
     "page": 1,
     "total": 629
   }
-  
+  */
   
   
   
@@ -158,7 +159,8 @@ const AlertTable: FC = () => {
     DDoS: 'red', // Màu đỏ cho DDoS
     PortScan: '#CD853F', // Màu vàng cho PortScan (ví dụ)
     BruceForce : '#FFD700', 
-    UnknowAttack:'#0000FF' 
+    UnknowAttack:'#0000FF' ,
+    //'DoS Hulk': 'red'   nếu key có khoảng trắng thì bọc vào trong '' vào
     
   };
   const columns: ColumnsType<any> = [
@@ -309,13 +311,13 @@ const AlertTable: FC = () => {
       <Card className="card-container" size="small">
         <CardTitleCustom title="List alert"/>
         <TableCustom
-          dataSource={Danhsachalert?.data}
+          dataSource={data?.data}
           columns={columns}
           bordered={true}
           //isLoading={!data && isLoading}
           isLoading={isLoading}
           limit={params.limit || 15 }
-          total={Danhsachalert?.total}
+          total={data?.total}
           onLimitChange={(limit) => {
             setParams({ ...params, limit });
           }}

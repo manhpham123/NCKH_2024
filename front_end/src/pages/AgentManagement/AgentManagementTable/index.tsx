@@ -40,7 +40,7 @@ const Danhsachip = {
                           ],
       "limit": 5,
       "page": 1,
-      "total": 10
+      "total": 5
     }
   
   //=================== KET THUC DU LIEU MAU===================
