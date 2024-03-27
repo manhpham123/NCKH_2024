@@ -34,7 +34,7 @@ export const useAlert = (
     filter?: Alertfilter
 ) => {
     const { data, error, isLoading, mutate } = useSWR(
-        'alert',
+        `alert/?page=${params?.page}&limit=${params?.limit}`,
         { refreshInterval: 0}
     );
     return {
