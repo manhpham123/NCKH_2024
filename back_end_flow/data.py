@@ -105,10 +105,10 @@ reverse_label_mapping = {value: key for key, value in label_mapping.items()}
 collection = db[f"flow_data_{ip}_{intf_str}"]
 
 #load model
-model = joblib.load("/home/frblam/NCKH_2024/back_end_flow/random_forest_model_312_5_label.joblib")
+model = joblib.load("random_forest_model_312_5_label.joblib")
 
 #model = keras.models.load_model('rfc1.md5')
-autoencoder = load_model('/home/frblam/NCKH_2024/back_end_flow/autoencoder_55_25_12_14_.h5')
+autoencoder = load_model('autoencoder_55_25_12_14_.h5')
 
 #CSDL 
 def read_all_data(collection_name):
@@ -179,7 +179,7 @@ def preprocess_autoencoder(df):
     index = df.index
     print(df.info())
     df.columns=df.columns.str.strip().str.lower().str.replace(' ','_').str.replace('(','').str.replace(')','')
-    scaler = joblib.load('/home/frblam/NCKH_2024/back_end_flow/minmax_scaler1.save')
+    scaler = joblib.load('minmax_scaler1.save')
     X = scaler.transform(df)
     return X, index
 
@@ -283,7 +283,7 @@ def preprocess_flow(df_f):
     
     df_sl = df[selected_columns1]
 
-    ss = joblib.load('/home/frblam/NCKH_2024/back_end_flow/scaler.save')
+    ss = joblib.load('scaler.save')
     df = ss.transform(df_sl)  
         
     return df, df_f
