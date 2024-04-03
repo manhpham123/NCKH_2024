@@ -36,18 +36,18 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem(<Link to={DASHBOARD}>Dashboard</Link>, '1', <AppstoreFilled />,),
+  getItem(<Link to={DASHBOARD}>Bảng Điều Khiển</Link>, '1', <AppstoreFilled />,),
   // getItem('Management', '2', <ApartmentOutlined />, [
   //   getItem('Option 3', '3'),
   //   getItem('Option 4', '4'),
   // ]),
-  getItem(<Link to={FLOW_MANAGEMENT}>Flow Management</Link>, '2', <ApartmentOutlined />),
+  getItem(<Link to={FLOW_MANAGEMENT}>Danh Sách FLow</Link>, '2', <ApartmentOutlined />),
   // getItem(<Link to={RULE}>Rule</Link>, '5', <LockFilled />),
   // getItem(<Link to={LOG}>Logs</Link>, '6', <FileTextOutlined />),
 
-  getItem(<Link to={AGENT_MANAGEMENT}>Agent Management</Link>, '3', <AppstoreFilled />),
-  getItem(<Link to={ALERT}>Alert</Link>, '4', <AppstoreFilled />),
-  getItem(<Link to={SETTING}>Setting</Link>, '5', <SettingFilled />),
+  getItem(<Link to={AGENT_MANAGEMENT}>Quản Lý Máy</Link>, '3', <AppstoreFilled />),
+  getItem(<Link to={ALERT}>Thông Báo</Link>, '4', <AppstoreFilled />),
+  // getItem(<Link to={SETTING}>Setting</Link>, '5', <SettingFilled />),
 ];
 export const SideBar: React.FC = () => {
   return (

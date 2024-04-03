@@ -45,13 +45,13 @@ const [filterData, setFilterData] = useState<Ipfilter>({});
         
         <Input placeholder="Search IP ..." />
         </Form.Item> */}
-        <Input placeholder="Source IP ..." />
+        {/* <Input placeholder="Source IP ..." />
         <ButtonCustom
           label="Search"
           bgColor="#2862AF"
           type="primary"
           onClick={() => setFilters({ ...filterData })}
-        />
+        /> */}
       </Space>
     </Form>
     

@@ -27,7 +27,7 @@ const AgentManagementDetail = () => {
   }, [AGENT_MANAGEMENT_DETAILS])
   console.log(id);
   const items = [{
-    label: "Thong ke",
+    label: "Thống Kê",
     key: "Statistic",
     children: <AgentMnDashboard />,
   },
@@ -35,12 +35,13 @@ const AgentManagementDetail = () => {
     label: "Log",
     key: "Events",
     children: <Logs />,
-  },
-  {
-    label: "Rules",
-    key: "ruleCustom",
-    children: <Rules />,
-  }]
+  }
+  // {
+  //   label: "Rules",
+  //   key: "ruleCustom",
+  //   children: <Rules />,
+  // }
+]
 
   return (
     <div className="container-wrapper">

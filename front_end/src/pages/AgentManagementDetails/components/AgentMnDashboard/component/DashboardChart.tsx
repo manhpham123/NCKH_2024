@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, LineElement, ChartData, PointElement, LinearScale, CategoryScale, ChartDataset, BarElement } from 'chart.js';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Space, Typography } from 'antd';
@@ -6,22 +6,44 @@ import './style.scss'
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import  { FC } from "react";
-import {useStaticService,useStaticProtocol } from "../../../../../utils/request/index";
+import {useStaticService,useStaticProtocol,useStaticattack } from "../../../../../utils/request/index";
 type Props = {
     id?:string;
   }
-
+type m = {
+      "SSH"?: number;
+      "Unknown"?: number;
+      "FTP (Control)"?: number;
+      "HTTP"?: number;
+      "FTP (Data)"?: number;
+      "HTTPS"?: number;
+      
+}
+type attack = {
+    "Bruce Force"?: number;
+    "PortScan"?: number;
+    "DoS slowloris"?: number;
+    "Unknown attack"?: number;
+}
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, BarElement)
 //function AgentMnDashboardChart() {
 const AgentMnDashboardChart: FC<Props> = ({ id }) => {
     // ========thong ke du lieu cua tung ip theo cai id ta truyen vao
   console.log(id)
   //=============== data goi API
+  const [dataservice,setDataservice] = useState<m>({});
   const {data,mutate} =  useStaticService(); 
 
   const {data:datapie} =  useStaticProtocol();
+  const [datatancong,setDatatancong] = useState<attack>({});
+  const {data:datapactack} =  useStaticattack();
   //================
-
+    useEffect(() => {
+        if(data && datapactack){
+            setDataservice(data)
+            setDatatancong(datapactack)
+        }
+    },[])
     const dataPieChart = {
         labels: ['Quang Huy', 'Dang Duong', 'Hoang Dat'],
         datasets: [
@@ -118,34 +140,38 @@ const AgentMnDashboardChart: FC<Props> = ({ id }) => {
         series: [{
             name: 'số lượng flow',
             data: [
-                ['Normal',100],
-                ['Ddos', 10],
-                ['PortScan', 20],
-                ['BruceForce', 15],
+                ['Port Scan',datatancong?.PortScan], // ataservice?.['FTP (Control)'],
+                ['Unknown attack', datatancong?.['Unknown attack']],
+                ['DoS', datatancong['DoS slowloris']],
+                ['Bruce Force', datatancong['Bruce Force']]
             ]
         }]
     };
     const mockDataService = [
         {
-            name: 'DNS',
-            data: data?.DNS,
+            name: 'FTP (Control)',
+            data: dataservice?.['FTP (Control)'],
+        },
+        {
+            name: 'FTP (Data)',
+            data: dataservice?.['FTP (Data)'],
         },
         {
             name: 'HTTPS',
-            data: data?.HTTPS,
+            data: dataservice?.HTTPS,
         },
         {
             name: 'SSH',
-            data: data?.SSH,
+            data: dataservice?.SSH,
         },
         {
             name: 'HTTP',
-            data: data?.HTTP,
+            data: dataservice?.HTTP,
         },
-        // {
-        //     name: 'Khac',
-        //     data: data?.Unknown,
-        // }
+        {
+            name: 'Khác',
+            data: dataservice?.Unknown,
+        }
     ]
     const listServices = {
         labels: mockDataService.map(item => item.name),
@@ -165,8 +191,6 @@ const AgentMnDashboardChart: FC<Props> = ({ id }) => {
             x:{
                 title:{
                   display: true,
-                  text : 'Service',
-                  color:'red',
                   font: {
                     size: 16 // Đặt kích thước font chữ ở đây
                 }
@@ -175,8 +199,6 @@ const AgentMnDashboardChart: FC<Props> = ({ id }) => {
             y: {
                 title:{
                     display: true,
-                    text : 'FLow',
-                    color:'red',
                     font: {
                         size: 16 // Đặt kích thước font chữ ở đây
                     }
@@ -200,34 +222,32 @@ const AgentMnDashboardChart: FC<Props> = ({ id }) => {
         }
       }
     return (
+        // <Space className='chart-wrapper'>
+        //     <div className='chart-item'>
+        //     <Typography className='chart-title'>Thống Kê Service</Typography>
+        //     <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
+        //     <div className='chart-container'>
+        //     <HighchartsReact highcharts={Highcharts} options={customepie} />
+        //     </div>
+        //     <div className='chart-container'>
+        //     <HighchartsReact highcharts={Highcharts} options={customepieactack} /> 
+        //     </div>  
+        //     </div>
+        // </Space>
+
         <Space className='chart-wrapper'>
             <div className='chart-item'>
-
-            <Typography className='chart-title'>Thống kê service</Typography>
-
-            <div>
-            <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
-            </div>
-
-            <div className='chart-container'>
-            <HighchartsReact highcharts={Highcharts} options={customepie} />
-            </div>
-            
-            <div className='chart-container'>
-            <HighchartsReact highcharts={Highcharts} options={customepieactack} /> 
-            </div>  
-
-            </div>
-            {/* <div className='chart-item'>
-                <Typography className='chart-title'>Number of access</Typography>
-                <Line data={dataLineChart} options={optionsLine} className='chart-content' />
+            <Typography className='chart-title'>Thống Kê Service</Typography>
+             <Bar data={listServices} options={optionsBar} plugins={[chartAreaBackground]} />
             </div>
             <div className='chart-item'>
-                <Typography className='chart-title'>Number of access</Typography>
-                <Line data={dataLineChart} options={optionsLine} className='chart-content' />
-                        <Typography className='chart-title'>Thong ke tan cong</Typography>
-            </div> */}
+            <HighchartsReact highcharts={Highcharts} options={customepie} />
+            </div>
+            <div className='chart-item'>
+             <HighchartsReact highcharts={Highcharts} options={customepieactack} /> 
+            </div>
         </Space>
+
     );
 }
 

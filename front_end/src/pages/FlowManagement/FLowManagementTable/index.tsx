@@ -13,15 +13,22 @@ import { useNavigate } from "react-router-dom";
 //import { FLOW_MANAGEMENT_DETAILS } from "../../../routes/route.constant";
 import { usePhantrang } from "../../../utils/request";
 import { Flowfilter } from "../../../constants/types/common.type";
+import { type } from "os";
 
-const FLowManagementTable: FC = () => {
+type Props = {
+  filters: Flowfilter;
+  setFilters: (filters: Flowfilter) => void;
+};
+
+const FLowManagementTable: FC<Props> = ({setFilters, filters}) => {
   const navigate = useNavigate();
   const [params, setParams] = useState<CommonGetAllParams>({
     limit: 10,
     page: 1,
   });
-  const {data, mutate,isLoading} = usePhantrang(params);
+  const {data, mutate,isLoading} = usePhantrang(params, filters);
 
+  console.log(filters);
   
   const [isEditSystemParamsModalShow, SetIsEditSystemParamsModalShow] =
     useState(false);
@@ -42,10 +49,16 @@ const FLowManagementTable: FC = () => {
   //     };
   //   })
   //   : [];
+  const predictionColors: { [key: string]: string } = {
+    'DoS slowloris': '#DC143C', // Màu đỏ cho DDoS
+    PortScan: '#1703fc', 
+    'Bruce Force' : '#FF7433', 
+    'Unknown attack':'#00489a' ,    
+  };
   const columns: ColumnsType<any> = [
     {
       key: 1,
-      title: "Index",
+      title: "Số Thứ Tự",
       align: "center",
       width: "10%",
       render: (_, record, index) => {
@@ -120,14 +133,17 @@ const FLowManagementTable: FC = () => {
     },
     {
       key: 8,
-      title: "du doan",
+      title: "Dự Đoán",
       dataIndex: "label",
       align: "center",
-      render: (group) => (
-        <Tooltip title={group}>
-          <div className="inline-text">{group}</div>
-        </Tooltip>
-      ),
+      render: (group: string) => {
+        const color = predictionColors[group] || ''; // Lấy màu sắc tương ứng từ bảng mã màu
+        return (
+          <Tooltip title={group}>
+            <div className={`inline-text ${color ? 'prediction-column' : ''}`} style={{ backgroundColor: color,color: 'white',fontWeight: 'bold' }}>{group}</div>
+          </Tooltip>
+        );
+      },
     }
     // {
     //   key: 9,
@@ -149,7 +165,7 @@ const FLowManagementTable: FC = () => {
   return (
     <div>
       <Card className="card-container" size="small">
-        <CardTitleCustom title="List flows"/>
+        <CardTitleCustom title="Danh Sách FLow"/>
         <TableCustom
           dataSource={data?.data}
           columns={columns}

@@ -17,13 +17,13 @@ const FlowManagement = () => {
        }
     ]
     dispatch(setSelectedBreadCrumb(breadCrumb))
-  },[FLOW_MANAGEMENT]) 
+  },[FLOW_MANAGEMENT])
   return (
     <div className="container-wrapper">
       <div style={{marginBottom: "12px"}}>
         <FLowManagementFilter filters={filter} setFilters={setFilter}/>
       </div>
-       <FLowManagementTable />
+       <FLowManagementTable filters={filter} setFilters={setFilter}/>
     </div>
   );
 };
