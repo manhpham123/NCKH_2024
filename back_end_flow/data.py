@@ -14,6 +14,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 import time
 from sklearn.preprocessing import normalize
 #import keras
+from tensorflow.keras.models import load_model
 
 
 protocol_numbers = {
@@ -67,6 +68,8 @@ port_to_protocol = {
     # Thêm các cổng và giao thức khác theo nhu cầu
 }
 
+threshold = 0.0006894694064366165
+
 def get_protocol_name(protocol_number):
     return protocol_numbers.get(protocol_number, "Unknown")
 
@@ -81,11 +84,8 @@ class Static:
         self.alert_ls = alert_ls
         self.service_ls = service_ls
 
-service_ls = {}
-pro_ls = {}
-ip_ls = {}
-alert_ls = {}
-st1 = Static(pro_ls, ip_ls, alert_ls, service_ls)        
+
+       
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["cici_flow"]
@@ -94,18 +94,21 @@ db = client["cici_flow"]
 ip = "192.168.189.133"
 #interface 
 intf_str = "ens36"
-label_mapping = {"BENIGN": 0, "DoS Hulk": 1,'PortScan':2,'DDoS':3,'DoS GoldenEye':4,
-                 'FTP-Patator':5,'SSH-Patator':6,'DoS slowloris':7,'DoS Slowhttptest':8,'Bot':9,'Web Attack-Brute Force':10,
-                 'Web Attack-XSS':11,'Infiltration':12,'Web Attack-Sql Injection':13,'Heartbleed':14}
+num_rows = 0
+# label_mapping = {"BENIGN": 0, "DoS Hulk": 1,'PortScan':2,'DDoS':3,'DoS GoldenEye':4,
+#                  'FTP-Patator':5,'SSH-Patator':6,'DoS slowloris':7,'DoS Slowhttptest':8,'Bot':9,'Web Attack-Brute Force':10,
+#                  'Web Attack-XSS':11,'Infiltration':12,'Web Attack-Sql Injection':13,'Heartbleed':14}
+
+label_mapping = {"BENIGN": 0, "PortScan":1, "DoS slowloris": 2, "Bruce Force": 3, "Unknown attack": 4}
 reverse_label_mapping = {value: key for key, value in label_mapping.items()}
 
 collection = db[f"flow_data_{ip}_{intf_str}"]
 
 #load model
-model = joblib.load("random_forest_model.joblib")
+model = joblib.load("/home/frblam/NCKH_2024/back_end_flow/random_forest_model_312_5_label.joblib")
 
 #model = keras.models.load_model('rfc1.md5')
-
+autoencoder = load_model('/home/frblam/NCKH_2024/back_end_flow/autoencoder_55_25_12_14_.h5')
 
 #CSDL 
 def read_all_data(collection_name):
@@ -135,6 +138,63 @@ def FilterRead_data(filter_field, filter_value):
     filtered_data = list(collection.find(filter_condition))
 
     return filtered_data
+drop_only_nol_zero = ['Fwd PSH Flags', 'Bwd PSH Flags', 'Fwd URG Flags', 'Bwd URG Flags', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count'
+                      , 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Fwd Avg Bytes/Bulk'
+                      , 'Fwd Avg Packets/Bulk', 'Fwd Avg Bulk Rate', 'Bwd Avg Bytes/Bulk', 'Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate', ]
+
+drop_only_nol_inden = [ 'Subflow Fwd Packets', 'Subflow Bwd Packets', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Fwd Header Length.1', 'Average Packet Size']
+
+
+
+
+def clear_data_only(df):
+    df.columns=df.columns.str.strip()
+    print("Dataset Shape: ",df.shape)
+
+    num=df._get_numeric_data()
+    num[num<0]=0
+
+    df.drop(columns=drop_only_nol_zero, axis=1, inplace=True)
+    print("Zero Variance Columns: ", drop_only_nol_zero, "are dropped.")
+    print("Shape after removing the zero varaince columns: ",df.shape)
+
+    df.replace([np.inf,-np.inf],np.nan,inplace=True)
+    print(df.isna().any(axis=1).sum(),"rows dropped")
+    df.dropna(inplace=True)
+    print("Shape after Removing NaN: ",df.shape)
+
+    df.drop_duplicates(inplace=True)
+    print("Shape after dropping duplicates: ",df.shape)
+
+    df.drop(columns=drop_only_nol_inden,axis=1,inplace=True)
+    print("Columns which have identical values: ",drop_only_nol_inden," dropped!")
+    print("Shape after removing identical value columns: ",df.shape)
+    return df
+def preprocess_autoencoder(df):
+    drop = [ 'Source IP','Destination IP', 'Source Port', 'Timestamp'
+        , 'Protocol' ,'label']
+    df.drop(columns=drop, axis=1, inplace=True)
+    
+    df = clear_data_only(df)
+    index = df.index
+    print(df.info())
+    df.columns=df.columns.str.strip().str.lower().str.replace(' ','_').str.replace('(','').str.replace(')','')
+    scaler = joblib.load('/home/frblam/NCKH_2024/back_end_flow/minmax_scaler1.save')
+    X = scaler.transform(df)
+    return X, index
+
+def predict_anomalies(model , X, threshold):
+    # Dự đoán output bằng autoencoder
+    reconstructed = model.predict(X)
+    
+    # Tính reconstruction error
+    reconstruction_errors = np.mean((X - reconstructed) ** 2, axis=1)
+    
+    # So sánh error với ngưỡng để nhận diện bất thường
+    # Nếu error > threshold, đánh dấu là bất thường (1), ngược lại là bình thường (0)
+    anomalies = np.where(reconstruction_errors > threshold, 4, 0)
+    
+    return anomalies
 
 
 
@@ -172,20 +232,21 @@ def reduce_mem_usage(df, verbose=True):
    
     if verbose:
         print('Mem. usage decreased to {:5.2f} Mb ({:.1f}% reduction)'.format(end_mem, 100 * (start_mem - end_mem) / start_mem))
-
     return df
 
 
 
 #Tien xu li du lieu 
 def preprocess_flow(df_f):
-    columns_to_drop = ['Source IP', 'Source Port', 'Destination IP', 'Protocol', 'Timestamp']
-    # Bỏ các cột đã chọn khỏi dataframe
-    df = df_f.drop(columns=columns_to_drop, axis=1)
-    df.head()
-    df = reduce_mem_usage(df)
-    df.shape
+    df_f = df_f[df_f["Destination Port"]!= 27017]
+    df_f = df_f[df_f["Source Port"] != 27017]
     
+    # columns_to_drop = ['Source IP', 'Source Port', 'Destination IP', 'Protocol', 'Timestamp']
+    # # Bỏ các cột đã chọn khỏi dataframe
+    # df_f = df_f.drop(columns=columns_to_drop, axis=1)
+    #df = reduce_mem_usage(df_f)
+    #df.shape
+    df = df_f.copy()
     train_df = df  
 
     stats = [] 
@@ -213,16 +274,19 @@ def preprocess_flow(df_f):
 
     for i in inf_cols:
         df[i] = df[i].apply(lambda x:100000000 if x == np.inf else x)
-    
-    df = df[['Destination Port', 'Flow Duration', 'Total Fwd Packets', 'Total Backward Packets',
-       'Total Length of Fwd Packets', 'Total Length of Bwd Packets',
-       'Packet Length Variance', 'Bwd Packet Length Std', 'Max Packet Length',
-       'Min Packet Length', 'Bwd Packet Length Min', 'Fwd Packet Length Max']]
-
-    ss = StandardScaler()
-    df = ss.fit_transform(df)  
         
-    return df
+    selected_columns1 = ['Bwd Packet Length Mean', 'Total Length of Fwd Packets', 'Flow Bytes/s',
+                    'Fwd Packet Length Mean', 'Subflow Fwd Bytes', 'Avg Fwd Segment Size'
+                    ,'Fwd Packet Length Std', 'Flow IAT Mean',
+                    'Flow IAT Max', 'Fwd IAT Mean', 'Flow Duration',
+                    'Fwd Packet Length Max', 'Init_Win_bytes_backward', 'Init_Win_bytes_forward']
+    
+    df_sl = df[selected_columns1]
+
+    ss = joblib.load('/home/frblam/NCKH_2024/back_end_flow/scaler.save')
+    df = ss.transform(df_sl)  
+        
+    return df, df_f
 
 # Giả sử data được đọc từ hàm read_all_data(collection) và bạn đã có `data`
 
@@ -235,7 +299,7 @@ def preprocess_flow(df_f):
 def predict_label(collection):
     data = read_all_data(collection)
     df_f = pd.DataFrame(data)
-    df_processed = preprocess_flow(df_f)
+    df_processed, df_f = preprocess_flow(df_f)
     columns_to_drop = ['_id']
 
     # Bỏ các cột đã chọn khỏi dataframe
@@ -244,35 +308,54 @@ def predict_label(collection):
     # Thực hiện dự đoán
     pred = model.predict(df_processed)
     
-    
-    df_st = df_f[['Source IP', 'Source Port', 'Destination IP', 'Destination Port', 'Protocol', 'Timestamp', 'Flow Duration']]
-
-    # Thêm trường 'label' vào `df_f` với giá trị từ `pred`
-    df_f = df_f[['Destination Port', 'Flow Duration', 'Total Fwd Packets', 'Total Backward Packets',
-       'Total Length of Fwd Packets', 'Total Length of Bwd Packets',
-       'Packet Length Variance', 'Bwd Packet Length Std', 'Max Packet Length',
-       'Min Packet Length', 'Bwd Packet Length Min', 'Fwd Packet Length Max']]
+   
     df_f['label'] = pred
-    df_st['label'] = pred
+    #df_st['label'] = pred
     df_f['label'] = df_f['label'].map(reverse_label_mapping)
-    df_st['label'] = df_st['label'].map(reverse_label_mapping)
+    #df_st['label'] = df_st['label'].map(reverse_label_mapping)
     
+    df_benign = df_f[df_f['label'] == 'BENIGN']
+    
+    df_pre, index = preprocess_autoencoder(df_benign)
+    
+    pred_au = predict_anomalies(autoencoder,df_pre, threshold)
+    
+    print(pred_au)
+    
+    vectorized_map = np.vectorize(reverse_label_mapping.get)
+
+# Áp dụng ánh xạ cho mảng
+    pred_au = vectorized_map(pred_au)
+    
+    #pred_au = pred_au.map(reverse_label_mapping)
+    
+    df_f.loc[index, 'label'] = pred_au
+    
+    
+    df_st = df_f[['Source IP', 'Source Port', 'Destination IP', 'Destination Port', 'Protocol', 'Timestamp', 'Flow Duration', 'label']]
+
     #print(df_f)
     
     return df_f.to_dict(orient='records'), df_st.to_dict(orient='records')
     #return df_f
         
-df_p, df_st = predict_label(collection)
+#df_p, df_st = predict_label(collection)
 
 # ham thong ke
 def get_ls(df_st):
+    service_ls = {}
+    pro_ls = {}
+    ip_ls = {}
+    alert_ls = {}
+    st1 = Static(pro_ls, ip_ls, alert_ls, service_ls) 
+    
     for d in df_st:
         if get_protocol_name(int(d['Protocol'])) not in st1.pro_ls.keys():
             st1.pro_ls[get_protocol_name(int(d['Protocol']))] = 0
             
         if get_protocol_name(int(d['Protocol'])) in st1.pro_ls.keys():
             st1.pro_ls[get_protocol_name(int(d['Protocol']))] += 1
-            
+    
         if get_port_app_pro(int(d['Destination Port'])) not in st1.service_ls.keys():
             st1.service_ls[get_port_app_pro(int(d['Destination Port']))] = 0
             
@@ -290,6 +373,7 @@ def get_ls(df_st):
         
         if d['label'] in st1.alert_ls.keys():
             st1.alert_ls[d['label']] += 1
+    
     return st1
 
 
@@ -301,26 +385,26 @@ def Filter(field, value, df_st):
     return filter_data
 
 #du doan bat thuong
-def get_alert (df_p):
+def get_alert (df_st):
     l_df_a = []
     sum_sql_dos = 0
     sum_sql = 0
-    for row in df_p:
-        if row['label'] != 'BENIGN' and row["Destination Port"] != 27017 and row["Source Port"] != 27017: 
+    for row in df_st:
+        if row['label'] != 'BENIGN' : 
             #row['label'] = row['label'].map(label_mapping)
             l_df_a.append(row)
-            print(row['label'], row["Destination Port"])
+            print(row['label'])
             print(len(l_df_a))
-        if row["Destination Port"] == 27017 and row['label'] != 'BENIGN':
-            sum_sql_dos += 1
-        if row["Destination Port"] == 27017:
-            sum_sql += 1
-    print(sum_sql_dos)
-    print(sum_sql_dos/sum_sql)   
+    #     if row["Destination Port"] == 27017 and row['label'] != 'BENIGN':
+    #         sum_sql_dos += 1
+    #     if row["Destination Port"] == 27017:
+    #         sum_sql += 1
+    # print(sum_sql_dos)
+    #print(sum_sql_dos/sum_sql)   
     return l_df_a
         
-kq =  get_alert(df_st)
-#print(kq)
+# kq =  get_alert()
+# print(kq)
 
 # st2 = get_ls(df_st)
 

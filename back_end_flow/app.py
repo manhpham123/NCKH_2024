@@ -19,7 +19,7 @@ db = client["cici_flow"]
 
 ip = "192.168.189.133"
 intf_str = "ens33"
-
+num_rows = 0
 
 collection = db[f"flow_data_{ip}_{intf_str}"]
 
@@ -125,9 +125,13 @@ async def read_alert(page: int = Query(1, alias="page"), limit: int = Query(1, a
         
         skip = (page - 1) * limit
         # Tiền xử lý và dự đoán ở đây
-        df_l, df_st = predict_label(collection)
+        #df_l, df_st = predict_label(collection)
+        
+        df_p, df_st = predict_label(collection)
+        
         
         df_a = get_alert(df_st)
+        
         
         total = len(df_a)
         
@@ -177,6 +181,7 @@ async def static_protocol():
         
         sorted_pro_ls = dict(sorted(static_data.pro_ls.items(), key=lambda x:x[1], reverse=True))
         
+       
         return sorted_pro_ls
         
         # Trả về kết quả dưới dạng JSON
@@ -215,6 +220,24 @@ async def static_protocol():
         sorted_ser_ls = dict(sorted(static_data.service_ls.items(), key=lambda x:x[1], reverse=True))
         
         return sorted_ser_ls
+        
+        # Trả về kết quả dưới dạng JSON
+        #return df_f.to_dict(orient='records')
+    except Exception as e:
+    # Nếu có lỗi, trả về thông báo lỗi với status code 500
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@app.get("/statc/attack", response_model=Dict)
+async def static_attack():
+    try:
+        df_l, df_st = predict_label(collection)
+        
+        static_data = get_ls(df_st)
+        
+        sorted_att_ls = dict(sorted(static_data.alert_ls.items(), key=lambda x:x[1], reverse=True))
+       
+        return sorted_att_ls
         
         # Trả về kết quả dưới dạng JSON
         #return df_f.to_dict(orient='records')
