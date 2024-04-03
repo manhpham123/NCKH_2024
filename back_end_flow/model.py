@@ -98,3 +98,10 @@ class FlowData(BaseModel):
 # Ví dụ về cách sử dụng:
 # flow_data = FlowData(**your_dictionary)
 # print(flow_data)
+
+
+# host = '192.168.190.10'
+# port = 22  # Port SSH mặc định
+# username = 'william'
+# password = 'k'
+# command = 'sudo cicflowmeter -i ens33 -c --dir /home/william/Desktop/data'  # Lệnh bạn muốn thực thi
