@@ -14,9 +14,9 @@ const AgentMnDashboard = () => {
   return (
     <div className="customers-wrapper">
       <Space direction="horizontal" className="dasboard-gn-wrapper">
-        <DashboardGeneralItem title="Number of services" value={4} icon={<Icons.bell />} />
+        {/* <DashboardGeneralItem title="Number of services" value={4} icon={<Icons.bell />} />
         <DashboardGeneralItem title="Number of accesses" value={50} icon={<Icons.bell />} />
-        <DashboardGeneralItem title="Number of prevent IP" value={10} icon={<Icons.bell />} />
+        <DashboardGeneralItem title="Number of prevent IP" value={10} icon={<Icons.bell />} /> */}
       </Space>
       <DashboardChart id = {id} />
       {/* <Space direction="horizontal" className="dasboard-gn-wrapper" style={{marginTop: 10}}>

@@ -6,10 +6,8 @@ export type CommonGetAllParams = {
   limit?: number;
 };
 export type Flowfilter = {
-  SourceIp?: string;
-  SourcePort?:string;
-  DestinationIP?:string;
-  DestinationPort?:string;
+  filter_field?:string;
+  filter_value?:string;
 };
 export type Alertfilter = {
   SourceIp?: string;

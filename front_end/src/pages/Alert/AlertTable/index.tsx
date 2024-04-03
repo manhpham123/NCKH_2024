@@ -155,18 +155,17 @@ const AlertTable: FC = () => {
   //     };
   //   })
   //   : [];
+
   const predictionColors: { [key: string]: string } = {
-    DDoS: 'red', // Màu đỏ cho DDoS
-    PortScan: '#CD853F', // Màu vàng cho PortScan (ví dụ)
-    BruceForce : '#FFD700', 
-    UnknowAttack:'#0000FF' ,
-    //'DoS Hulk': 'red'   nếu key có khoảng trắng thì bọc vào trong '' vào
-    
+    'DoS slowloris': '#DC143C', // Màu đỏ cho DDoS
+    PortScan: '#1703fc', 
+    'Bruce Force' : '#FF7433', 
+    'Unknown attack':'#00489a' ,    
   };
   const columns: ColumnsType<any> = [
     {
       key: 1,
-      title: "Index",
+      title: "Số Thứ Tự",
       align: "center",
       width: "10%",
       render: (_, record, index) => {
@@ -263,14 +262,14 @@ const AlertTable: FC = () => {
     // }
     {
       key: 9,
-      title: "Dự đoán",
+      title: "Dự Đoán",
       dataIndex: "label",
       align: "center",
       render: (group: string) => {
         const color = predictionColors[group] || ''; // Lấy màu sắc tương ứng từ bảng mã màu
         return (
           <Tooltip title={group}>
-            <div className={`inline-text ${color ? 'prediction-column' : ''}`} style={{ backgroundColor: color }}>{group}</div>
+            <div className={`inline-text ${color ? 'prediction-column' : ''}`} style={{ backgroundColor: color,color: 'white',fontWeight: 'bold' }}>{group}</div>
           </Tooltip>
         );
       },
@@ -309,7 +308,7 @@ const AlertTable: FC = () => {
   return (
     <div>
       <Card className="card-container" size="small">
-        <CardTitleCustom title="List alert"/>
+        <CardTitleCustom title="Cảnh Báo"/>
         <TableCustom
           dataSource={data?.data}
           columns={columns}

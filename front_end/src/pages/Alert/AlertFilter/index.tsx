@@ -32,26 +32,26 @@ const [filterData, setFilterData] = useState<Alertfilter>({});
     <Form className="alert-FilterForm" layout="vertical">
       <Space direction="horizontal" style={{width: '100%'}}>
 
-        {/* <Form.Item label="chon truong">
-        <Select onChange={(target)=>}>
-            <Select.Option >ip nguon</Select.Option>      
-            <Select.Option>ip dich</Select.Option>  
-            <Select.Option>mac</Select.Option>      
-        </Select>
+      {/* <Form.Item label="chọn thuộc tính">
+          <Select value={filterData.filter_field} onChange={handleSelectChange} allowClear>
+            <Select.Option value="Source IP">IP Nguồn</Select.Option>
+            <Select.Option value="Source Port">Port Nguồn</Select.Option>
+            <Select.Option value="Destination IP">IP Đích</Select.Option>
+            <Select.Option value="Destination Port">Port Đích</Select.Option>
+            <Select.Option value="label">Nhãn</Select.Option>
+          </Select>
 
         </Form.Item>
-        
-        <Form.Item label="gia tri">
-        
-        <Input placeholder="Search IP ..." />
-        </Form.Item> */}
-        <Input placeholder="Source IP ..." />
-        <ButtonCustom
+        <Form.Item label="giá trị">
+
+      <Input placeholder="Value ..." onChange={e => setFilterData({...filterData, filter_value: e.target.value})}/>
+      </Form.Item>
+      <ButtonCustom
           label="Search"
           bgColor="#2862AF"
           type="primary"
           onClick={() => setFilters({ ...filterData })}
-        />
+        /> */}
       </Space>
     </Form>
     

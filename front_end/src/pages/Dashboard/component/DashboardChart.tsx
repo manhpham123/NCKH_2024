@@ -17,7 +17,11 @@ const {data:datapie} =  useStaticProtocol();
 
     const mockDataService = [
         {
-            name: 'DNS',
+            name: 'FTP (Control)',
+            data: data?.DNS,
+        },
+        {
+            name: 'FTP (Data)',
             data: data?.DNS,
         },
         {
@@ -32,10 +36,10 @@ const {data:datapie} =  useStaticProtocol();
             name: 'HTTP',
             data: data?.HTTP,
         },
-        // {
-        //     name: 'Khac',
-        //     data: data?.Unknown,
-        // }
+        {
+            name: 'Khác',
+            data: data?.Unknown,
+        }
     ]
   
 
@@ -153,10 +157,11 @@ const {data:datapie} =  useStaticProtocol();
         series: [{
             name: 'số lượng flow',
             data: [
-                ['Normal',500],
-                ['Ddos', 50],
-                ['PortScan', 40],
-                ['BruceForce', 30],
+                ['Normal',645],
+                ['DoS',120],
+                ['Port Scan',115],
+                ['Bruce Force',150],
+                ['Unknown attack',140]
             ]
         }]
     };
@@ -169,7 +174,7 @@ const {data:datapie} =  useStaticProtocol();
             text: 'Thống kê tấn công theo từng máy'
         },
         xAxis: {
-            categories: ['192.168.10.1', '192.168.10.2', '192.168.10.3', '192.168.10.4','192.168.10.5']
+            categories: ['192.168.190.10', '192.168.190.11', '192.168.190.12']
         },
         yAxis: {
             min: 0,
@@ -183,19 +188,23 @@ const {data:datapie} =  useStaticProtocol();
             }
         },
         series: [ {
-            name: 'Ddos',
-            data: [50,40,30,20,15]
+            name: 'DoS',
+            data: [50,40,30]
         }, {
-            name: 'PortScan',
-            data: [60,40,50,30,45]
+            name: 'Port Scan',
+            data: [70,35,10]
         },
         {
-            name: 'BruceForce',
-            data: [50,40,50,30,45]
+            name: 'Bruce Force',
+            data: [70,30,45]
+        },
+        {
+            name: 'Unknown attack',
+            data: [50,40,50]
         },
         {
             name: 'Normal',
-            data: [100,90,80,70,60]
+            data: [200,210,235]
         }
     ]
     };

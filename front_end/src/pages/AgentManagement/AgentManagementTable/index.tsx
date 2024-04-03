@@ -32,11 +32,9 @@ const isLoading = false
 const Danhsachip = {
   "data": 
   [
-  {'ip':'192.168.10.1','id':1},
-  {'ip':'192.168.10.2','id':2},
-  {'ip':'192.168.10.3','id':3},
-  {'ip':'192.168.10.4','id':4},
-  {'ip':'192.168.10.5','id':5},
+  {'ip':'192.168.190.10','id':1},
+  {'ip':'192.168.190.11','id':2},
+  {'ip':'192.168.190.12','id':3}
                           ],
       "limit": 5,
       "page": 1,
@@ -66,7 +64,7 @@ const Danhsachip = {
   const columns: ColumnsType<any> = [
     {
       key: 1,
-      title: "Index",
+      title: "Số Thứ Tự",
       align: "center",
       width: "10%",
       render: (_, record, index) => {
@@ -75,7 +73,7 @@ const Danhsachip = {
     },
     {
       key: 2,
-      title: "dia chi ip",
+      title: "Địa Chỉ IP  ",
       dataIndex: "ip",
       align: "center",
       render: (group) => (
@@ -86,7 +84,7 @@ const Danhsachip = {
     },
     {
       key: 3,
-      title: "Status",
+      title: "Trạng Thái Theo Dõi",
       align: "center",
       width: "10%",
       render: (_, record) => (
@@ -97,7 +95,7 @@ const Danhsachip = {
     },
     {
       key: 4,
-      title: "Chi tiet",
+      title: "Thông Tin Chi Tiết",
       align: "center",
       width: "10%",
       render: (_, record) => (
@@ -117,7 +115,7 @@ const Danhsachip = {
   return (
     <div>
       <Card className="card-container" size="small">
-        <CardTitleCustom title="List agent"/>
+        <CardTitleCustom title="Danh Sách Các Máy Theo Dõi"/>
         <TableCustom
           dataSource={Danhsachip?.data}
           columns={columns}
